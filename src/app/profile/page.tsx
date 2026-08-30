@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 import { ProfileForm } from "./profile-form";
@@ -37,6 +38,10 @@ export default async function ProfilePage() {
         </div>
 
         <p className="text-sm text-neutral-500">{user.email}</p>
+
+        <Link href="/transactions" className="block text-sm underline">
+          Ver transacciones
+        </Link>
 
         <section className="space-y-4">
           <h2 className="text-lg font-medium">Datos personales</h2>

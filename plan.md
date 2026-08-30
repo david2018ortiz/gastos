@@ -46,7 +46,10 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 ## Fase 3 — Registro de transacciones
 
-- [ ] Formulario manual de transacción (texto): monto, tipo, categoría, etiquetas, nota
+- [x] Formulario manual de transacción (texto): monto, tipo, categoría, etiquetas, nota
+      — `/transactions/new` y listado en `/transactions`; crea etiquetas al
+      vuelo si no existen. Probado extremo a extremo contra la API real de
+      Supabase (categoría, transacción, etiqueta, vínculo, listado).
 - [ ] Entrada por voz: captura con Web Speech API (reconocimiento nativo del navegador)
 - [ ] Endpoint server-side que envía el texto (manual o transcrito) a GPT-5.6 Luna
 - [ ] Parseo de la respuesta IA → creación automática de transacción (tipo, monto, categoría sugerida, etiquetas sugeridas)
