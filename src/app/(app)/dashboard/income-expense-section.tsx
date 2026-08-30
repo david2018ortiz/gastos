@@ -72,38 +72,36 @@ export function IncomeExpenseSection({
 
   return (
     <>
-      <section className="space-y-3">
-        <div className="grid grid-cols-2 gap-2 text-center">
-          <button
-            type="button"
-            onClick={() => setTab("income")}
-            className={
-              "rounded-lg border p-3 text-center transition-colors " +
-              (tab === "income" ? "border-positive bg-positive/10" : "border-border")
-            }
-            aria-pressed={tab === "income"}
-          >
-            <p className="text-xs text-ink-muted">Ingresos</p>
-            <p className="text-sm font-semibold text-positive tabular-nums">
-              {currencyFormatter.format(totalIncome)}
-            </p>
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("expense")}
-            className={
-              "rounded-lg border p-3 text-center transition-colors " +
-              (tab === "expense" ? "border-negative bg-negative/10" : "border-border")
-            }
-            aria-pressed={tab === "expense"}
-          >
-            <p className="text-xs text-ink-muted">Gastos</p>
-            <p className="text-sm font-semibold text-negative tabular-nums">
-              {currencyFormatter.format(totalExpense)}
-            </p>
-          </button>
-        </div>
-      </section>
+      <div className="flex h-9 gap-0.5 rounded-md bg-surface-raised p-0.5">
+        <button
+          type="button"
+          onClick={() => setTab("income")}
+          className={
+            "flex flex-1 items-center justify-center gap-1.5 rounded text-xs font-medium transition-colors " +
+            (tab === "income" ? "bg-surface text-ink shadow-sm" : "text-ink-muted")
+          }
+          aria-pressed={tab === "income"}
+        >
+          Ingresos
+          <span className="tabular-nums text-positive">
+            {currencyFormatter.format(totalIncome)}
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("expense")}
+          className={
+            "flex flex-1 items-center justify-center gap-1.5 rounded text-xs font-medium transition-colors " +
+            (tab === "expense" ? "bg-surface text-ink shadow-sm" : "text-ink-muted")
+          }
+          aria-pressed={tab === "expense"}
+        >
+          Gastos
+          <span className="tabular-nums text-negative">
+            {currencyFormatter.format(totalExpense)}
+          </span>
+        </button>
+      </div>
 
       <div ref={sentinelRef} aria-hidden="true" />
 

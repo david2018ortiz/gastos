@@ -151,13 +151,13 @@ export default async function DashboardPage({
   const extraParams = { category: params.category, tag: params.tag };
 
   return (
-    <main className="flex-1 p-6">
-      <div className="mx-auto max-w-sm space-y-8">
+    <main className="flex-1 p-5">
+      <div className="mx-auto max-w-sm space-y-4">
         <PageTitleBar title="Resumen" />
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 
-        <div className="space-y-1 py-1 text-center">
+        <div className="text-center">
           <p className="text-xs text-ink-muted">Saldo actual</p>
           <p className="text-2xl font-semibold tabular-nums text-ink">
             {currencyFormatter.format(balance)}
