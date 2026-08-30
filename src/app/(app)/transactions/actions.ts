@@ -103,6 +103,53 @@ export async function createTransaction(
   redirect("/transactions");
 }
 
+export type QuickAddState = { error: string | null; success: boolean };
+
+// Variante para el botón de "agregar rápido" del resumen: guarda sin salir
+// de la página (a diferencia de createTransaction, que redirige a
+// /transactions). Pensada para registrar un gasto en un par de toques.
+export async function quickAddTransaction(
+  _prevState: QuickAddState,
+  formData: FormData,
+): Promise<QuickAddState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "No has iniciado sesión.", success: false };
+  }
+
+  const type = String(formData.get("type") ?? "expense");
+  const amount = Number(formData.get("amount") ?? "");
+  const categoryId = String(formData.get("categoryId") ?? "") || null;
+  const note = String(formData.get("note") ?? "").trim() || null;
+
+  if (type !== "income" && type !== "expense") {
+    return { error: "Tipo de transacción inválido.", success: false };
+  }
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { error: "El monto debe ser un número mayor a cero.", success: false };
+  }
+
+  const { error } = await supabase.from("transactions").insert({
+    user_id: user.id,
+    type,
+    amount,
+    category_id: categoryId,
+    note,
+  });
+
+  if (error) {
+    return { error: "No se pudo guardar la transacción.", success: false };
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/transactions");
+  return { error: null, success: true };
+}
+
 export async function updateTransaction(
   _prevState: TransactionActionState,
   formData: FormData,

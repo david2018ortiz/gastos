@@ -2,44 +2,38 @@
 
 import { useEffect, useState } from "react";
 
-type Theme = "system" | "light" | "dark";
+type Theme = "light" | "dark";
 
 function applyTheme(theme: Theme) {
-  if (theme === "system") {
-    document.documentElement.removeAttribute("data-theme");
-    localStorage.removeItem("walley-theme");
-  } else {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("walley-theme", theme);
-  }
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("walley-theme", theme);
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const stored = localStorage.getItem("walley-theme");
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored);
+    if (stored === "dark") {
+      setTheme("dark");
     }
   }, []);
 
-  function cycle() {
-    const next: Theme = theme === "system" ? "light" : theme === "light" ? "dark" : "system";
+  function toggle() {
+    const next: Theme = theme === "light" ? "dark" : "light";
     setTheme(next);
     applyTheme(next);
   }
 
-  const label =
-    theme === "system" ? "Sistema" : theme === "light" ? "Claro" : "Oscuro";
-  const icon = theme === "system" ? "🖥️" : theme === "light" ? "☀️" : "🌙";
+  const label = theme === "light" ? "Claro" : "Oscuro";
+  const icon = theme === "light" ? "☀️" : "🌙";
 
   return (
     <button
       type="button"
-      onClick={cycle}
+      onClick={toggle}
       className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs text-ink-secondary transition-colors hover:bg-surface-raised"
-      aria-label={`Tema: ${label}. Tocar para cambiar.`}
+      aria-label={`Tema ${label}. Tocar para cambiar a ${theme === "light" ? "oscuro" : "claro"}.`}
     >
       <span aria-hidden="true">{icon}</span>
       {label}

@@ -15,7 +15,12 @@ export default function LoginPage() {
   return (
     <main className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-sm space-y-6">
-        <h1 className="text-2xl font-semibold">Iniciar sesión</h1>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold">Bienvenido de nuevo</h1>
+          <p className="text-sm text-ink-secondary">
+            Inicia sesión para ver tus ingresos, gastos, deudas y ahorro.
+          </p>
+        </div>
 
         <form action={formAction} className="space-y-4">
           <div className="space-y-1">
@@ -33,9 +38,14 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="password" className="text-sm font-medium">
-              Contraseña
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="text-sm font-medium">
+                Contraseña
+              </label>
+              <Link href="/forgot-password" className="text-xs underline text-ink-secondary">
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
             <input
               id="password"
               name="password"

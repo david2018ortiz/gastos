@@ -3,7 +3,6 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { RegisterServiceWorker } from "./register-sw";
 import { ThemeScript } from "@/components/theme-script";
-import { PageTransition } from "@/components/page-transition";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#146152",
+  themeColor: "#8ca0b5",
   viewportFit: "cover",
 };
 
@@ -43,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className="min-h-full flex flex-col bg-page text-ink"
         suppressHydrationWarning
       >
-        <PageTransition>{children}</PageTransition>
+        {children}
         <RegisterServiceWorker />
       </body>
     </html>

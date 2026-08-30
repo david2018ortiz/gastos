@@ -24,9 +24,20 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
       credenciales reales de Apple Developer (pendiente, requiere cuenta de
       pago de Apple Developer que el asistente no puede crear)
 - [x] Pantalla de perfil: editar nombre, teléfono, edad
-- [x] Cambiar contraseña
+- [x] Cambiar contraseña (estando ya autenticado)
+- [x] Recuperar contraseña olvidada — `/forgot-password` (envía enlace por
+      email vía `resetPasswordForEmail`) + `/reset-password` (define la
+      nueva); no estaba en el plan original, se agregó tras un problema real
+      de acceso de un usuario
 - [x] Cerrar sesión
 - [x] Tabla `profiles` con RLS (cada usuario ve solo lo suyo)
+- [x] Confirmación de email automática al registrarse (trigger
+      `auto_confirm_email`): por defecto Supabase exige confirmar el correo
+      antes de poder iniciar sesión, lo cual bloqueaba a los usuarios sin
+      SMTP propio configurado; el trigger confirma el email en el momento
+      del registro para que se pueda entrar de inmediato. También se puede
+      desactivar el requisito desde Authentication → Providers → Email →
+      "Confirm email" en el dashboard de Supabase.
 
 ## Fase 2 — Modelo de datos base
 
@@ -50,7 +61,17 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
       — `/transactions/new` y listado en `/transactions`; crea etiquetas al
       vuelo si no existen. Probado extremo a extremo contra la API real de
       Supabase (categoría, transacción, etiqueta, vínculo, listado).
-- [ ] Entrada por voz: captura con Web Speech API (reconocimiento nativo del navegador)
+- [x] Entrada por voz: captura con Web Speech API (reconocimiento nativo del
+      navegador) — botón 🎙️ en el "agregar rápido" del resumen; transcribe y
+      hace un parseo heurístico simple (sin IA: extrae el primer número como
+      monto, detecta "ingreso" por palabras clave, intenta calzar el nombre
+      de una categoría existente en el texto). El usuario ve y corrige el
+      resultado antes de guardar. El parseo real con IA sigue bloqueado por
+      el modelo pendiente (bullet siguiente).
+- [x] "Agregar rápido" fuera del flujo original del plan: botón flotante en
+      el resumen (`/dashboard`) para registrar un gasto/ingreso en un par de
+      toques sin cambiar de página (`quick-add-transaction.tsx` +
+      `quickAddTransaction` en `transactions/actions.ts`)
 - [ ] Endpoint server-side que envía el texto (manual o transcrito) a GPT-5.6 Luna
 - [ ] Parseo de la respuesta IA → creación automática de transacción (tipo, monto, categoría sugerida, etiquetas sugeridas)
 - [ ] Pantalla de confirmación/edición antes de guardar (el usuario puede corregir lo que la IA interpretó)
@@ -82,12 +103,20 @@ confirmar que borrar una categoría no rompe sus transacciones (quedan con
 - [x] Gráfico de distribución por categoría — barras animadas, deslizables
       horizontalmente, con ícono y color por categoría (paleta categórica
       validada del skill de dataviz — CVD-safe, verificada con el validador)
-- [x] Vista mensual navegable — `/dashboard?month=YYYY-MM` con flechas
-      anterior/siguiente (semanal no implementado, solo mensual)
+- [x] Vista navegable por día/semana/mes/año — `/dashboard?period=day|week|
+      month|year&date=YYYY-MM-DD`, selector tipo segmented control + flechas
+      anterior/siguiente que avanzan según el período elegido
+- [x] Filtro del resumen por categoría y por etiqueta (además del filtro que
+      ya existía en el listado de `/transactions`)
 - [x] Íconos de categoría desde una biblioteca interna de emojis
       (`icon-picker.tsx`), ya no texto libre
 - [x] Colores por etiqueta: chips con color asignado de forma determinística
       por id (misma paleta, identidad estable entre recargas)
+- [x] Menú de navegación persistente (fuera del plan original, pedido por
+      confusión real del usuario para llegar al perfil): barra inferior fija
+      con Resumen/Movimientos/Deudas/Ahorro/Perfil + barra superior con
+      campana de alertas, en un layout compartido `(app)/layout.tsx` para
+      todas las páginas autenticadas
 
 Probado extremo a extremo: consulta con joins de categorías/etiquetas contra
 la API real de Supabase, misma forma de datos que usa `/dashboard`.
@@ -145,20 +174,26 @@ verificado con datos reales contra la API de Supabase.
 
 ## Fase 10 — Diseño y pulido
 
-- [x] Paleta de color y tipografía distintiva — verde de marca `#146152`
-      (un solo acento, minimalista, sin arcoíris) + tipografía Manrope;
-      tokens centralizados en `globals.css` (`--brand`, `--ink`, `--surface`,
-      `--page`, `--border`, `--positive`, `--negative`, `--warning`); los
-      colores categóricos del gráfico de la Fase 5 se mantienen aparte
-      (identidad de datos, no decoración)
+- [x] Paleta de color y tipografía distintiva — ajustada dos veces por
+      feedback directo del usuario: primero un verde de marca (rechazado por
+      "contraste alto"), ahora un **pastel apagado azul grisáceo** (`--brand:
+      #8ca0b5`, texto oscuro sobre el pastel en vez de blanco) + tipografía
+      Manrope; tokens centralizados en `globals.css` (`--brand`, `--ink`,
+      `--surface`, `--page`, `--border`, `--positive`, `--negative`,
+      `--warning`); los colores categóricos del gráfico de la Fase 5 se
+      mantienen aparte (identidad de datos, no decoración)
 - [x] Animaciones de transición entre pantallas — Framer Motion
-      (`PageTransition`, fade + slide sutil en cada navegación)
+      (`PageTransition`, fade + slide sutil), movida al layout `(app)` para
+      que la barra de navegación no parpadee en cada cambio de página
 - [x] Micro-interacciones — botones con `active:scale-95` y hover, mensajes
       de error/éxito con animación de entrada (`feedback-enter`), barras de
       progreso/gráfico que ya animaban desde la Fase 5/6/7
-- [x] Modo claro/oscuro — toggle de 3 estados (sistema/claro/oscuro) en el
-      perfil, persistido en `localStorage`, sin flash gracias a un script
-      inline que aplica el tema antes del primer paint; todos los tokens
+- [x] Modo claro/oscuro — ajustado tras feedback: **ya no sigue la
+      preferencia del sistema operativo** (el usuario no quería oscuro por
+      defecto); toggle simple de 2 estados (claro/oscuro) en el perfil,
+      claro siempre por defecto, persistido en `localStorage`, sin flash
+      gracias a un script inline que aplica el tema antes del primer paint;
+      todos los tokens
       tienen su variante oscura
 - [x] Revisión de accesibilidad — botones primarios con altura mínima de
       44px (`min-h-11`); contraste verificado por cálculo (WCAG): marca vs.
@@ -167,6 +202,11 @@ verificado con datos reales contra la API de Supabase.
       Fase 5 claros en ambos modos
 - [ ] Prueba completa en iPhone real como PWA instalada — pendiente, requiere
       un dispositivo físico (ver Fase 0)
+- [x] Portada de bienvenida para visitantes no autenticados en `/` (antes
+      redirigía directo a `/login` sin explicar nada) con nombre, descripción
+      corta y los 4 puntos principales de la app; textos introductorios
+      añadidos también en `/login` y estados vacíos más claros en varias
+      pantallas
 
 ## Fase 11 — Colaboración / cuentas compartidas (familiar)
 
