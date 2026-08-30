@@ -4,13 +4,16 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 ## Fase 0 — Configuración inicial
 
-- [ ] Inicializar repo git y proyecto Next.js (TypeScript, App Router)
-- [ ] Configurar Tailwind CSS
-- [ ] Crear proyecto en Supabase (Auth + Postgres)
-- [ ] Definir variables de entorno (`.env.local`) y `.gitignore`
-- [ ] Configurar cliente Supabase (browser + server)
-- [ ] Configurar manifest.json, iconos y meta tags para instalación PWA en iOS
-- [ ] Configurar service worker básico (offline shell / cache estático)
+- [x] Inicializar repo git y proyecto Next.js (TypeScript, App Router)
+- [x] Configurar Tailwind CSS
+- [x] Crear proyecto en Supabase (Auth + Postgres) — se reutiliza el proyecto
+      existente "gastos" (id `deohllgitkpgburfckoa`) por límite de proyectos
+      gratuitos, en vez de crear uno nuevo
+- [x] Definir variables de entorno (`.env.local`) y `.gitignore`
+- [x] Configurar cliente Supabase (browser + server)
+- [x] Configurar manifest.json, iconos y meta tags para instalación PWA en iOS
+      (iconos son placeholders de color sólido, pendiente diseño real en Fase 10)
+- [x] Configurar service worker básico (offline shell / cache estático)
 - [ ] Verificar instalación real en iPhone vía Safari ("Añadir a pantalla de inicio")
 
 ## Fase 1 — Autenticación y perfil
