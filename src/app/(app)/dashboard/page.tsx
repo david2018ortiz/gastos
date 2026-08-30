@@ -6,7 +6,6 @@ import { IncomeExpenseSection } from "./income-expense-section";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { TransactionList } from "@/components/transaction-list";
-import { FilterBar } from "@/components/filter-bar";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -169,17 +168,11 @@ export default async function DashboardPage({
           totalExpense={totalExpense}
           incomeData={incomeCategoryData}
           expenseData={expenseCategoryData}
+          categories={categories ?? []}
+          tags={tags ?? []}
         />
 
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-ink-secondary">
-              Movimientos del período
-            </h2>
-            <FilterBar categories={categories ?? []} tags={tags ?? []} />
-          </div>
-          <TransactionList transactions={rows} />
-        </section>
+        <TransactionList transactions={rows} />
 
         {tagData.length > 0 && (
           <section className="space-y-3">
