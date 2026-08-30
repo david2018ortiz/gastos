@@ -106,34 +106,50 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 Permitir que un usuario invite a otra persona (por email) a compartir en un
 solo espacio unificado sus ingresos, gastos, deudas y planes de ahorro (ej.
-pareja o familia), en vez de llevarlos por separado.
+pareja o familia), en vez de llevarlos por separado. **Sin envío de
+correos**: la invitación solo es posible si el email ya corresponde a una
+cuenta existente en Walley, y aparece como pendiente dentro de la app (perfil
+del invitado / notificación al abrir la app), nunca por email.
 
-- [ ] Tabla `households` (espacio compartido: nombre, usuario creador, fecha)
-- [ ] Tabla `household_members` (usuario, household, rol —owner/member—, fecha
+- [x] Tabla `households` (espacio compartido: nombre, usuario creador, fecha)
+- [x] Tabla `household_members` (usuario, household, rol —owner/member—, fecha
       de ingreso) con RLS: solo miembros del household ven la fila
-- [ ] Tabla `household_invitations` (household, email invitado, usuario que
-      invita, estado —pending/accepted/rejected/expired—, token, fechas)
-- [ ] Flujo de invitación: el usuario dueño busca/escribe el email de la
-      persona a invitar y la invitación queda pendiente
-- [ ] Notificación/listado de invitaciones pendientes en el perfil del
-      invitado (si ya tiene cuenta en Walley) para aceptar o rechazar
-- [ ] Caso: invitar a un email que **no** tiene cuenta todavía — enviar
-      invitación que se vincula automáticamente al household cuando esa
-      persona se registre con ese email
-- [ ] Al aceptar, las cuentas quedan relacionadas: pasar a ver el
-      household compartido sin perder el histórico personal previo
-- [ ] Revisar y migrar el modelo de datos de la Fase 2 (`transactions`,
-      `categories`, `debts`, `savings_goals`, `alerts`) para que cada fila
-      pueda pertenecer a un `household_id` además de al `user_id` que la
-      creó, y actualizar las políticas RLS para chequear membresía en
-      `household_members` en vez de solo `auth.uid() = user_id`
+- [x] Tabla `household_invitations` (household, email invitado, usuario que
+      invita, estado —pending/accepted/rejected—, fechas); solo una invitación
+      pendiente por household+email a la vez
+- [x] Base de datos lista para el flujo de invitación: función
+      `invite_to_household(household_id, email)` — solo el creador invita, y
+      solo si el email ya tiene cuenta en Walley (si no existe, lanza error
+      explícito en vez de encolar nada)
+- [x] Base de datos lista para notificación/listado de invitaciones
+      pendientes: `household_invitations` filtra por RLS según el email del
+      usuario autenticado; falta construir la UI (perfil/badge) en una fase
+      de interfaz posterior
+- [x] Decisión: NO se soporta invitar a un email sin cuenta (se descartó el
+      auto-vínculo al registrarse, para evitar cualquier flujo parecido a
+      invitación por correo)
+- [x] Funciones `accept_household_invitation` / `decline_household_invitation`
+      — al aceptar, crean la membresía y las cuentas quedan relacionadas sin
+      perder el histórico personal previo
+- [x] Modelo de datos de la Fase 2 (`transactions`, `categories`, `debts`,
+      `savings_goals`, `alerts`) migrado: cada fila tiene `household_id`
+      opcional (null = personal); políticas RLS actualizadas para permitir
+      ver/editar tanto al dueño (`user_id`) como a cualquier miembro del
+      household (`is_household_member(household_id)`)
 - [ ] Selector en la UI para alternar entre vista "personal" y vista
-      "compartida" (household)
-- [ ] Gestión de miembros: ver quién pertenece al household, salir de un
-      household, remover a un miembro (solo el owner)
-- [ ] Definir qué pasa con transacciones/deudas/metas ya creadas por un
-      usuario si sale de un household compartido (¿se quedan como
-      personales o se pierden de la vista compartida?)
+      "compartida" (household) — pendiente de construir la interfaz
+- [x] Gestión de miembros en base de datos: `leave_household` (salir) y
+      `remove_household_member` (solo el owner remueve a otros); falta la UI
+- [x] Decisión: el creador (owner) no puede salir mientras haya otros
+      miembros (debe remover a todos primero o transferir el household);
+      las transacciones/deudas/metas que un usuario creó quedan con su
+      `user_id` siempre — al salir del household solo se le quita el acceso
+      compartido a esas filas, no se pierden ni se reasignan
+
+Probado extremo a extremo por SQL simulando dos usuarios: A crea household,
+invita a B (por email existente), B ve la invitación, la acepta, y una
+transacción de A con `household_id` es visible para B mientras que una
+transacción personal de A (sin `household_id`) no lo es.
 
 ## Notas abiertas / pendientes de decidir
 
@@ -145,6 +161,6 @@ pareja o familia), en vez de llevarlos por separado.
 - Validar si Safari/iOS permite leer el portapapeles automáticamente al
   abrir la PWA o si requiere un gesto explícito del usuario (botón "Pegar
   imagen"); ajustar UX según la limitación real encontrada.
-- Decidir en qué momento del desarrollo conviene implementar la Fase 11
-  (colaboración): cuanto más tarde se haga, más migración de RLS/datos
-  hace falta sobre lo ya construido en la Fase 2.
+- Construir la UI de la Fase 11 (invitar, ver/aceptar/rechazar invitaciones,
+  selector personal/compartido, gestión de miembros) cuando se aborden las
+  pantallas correspondientes — la base de datos ya está lista.
