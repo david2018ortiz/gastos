@@ -39,6 +39,9 @@ export default async function ProfilePage() {
 
         <p className="text-sm text-neutral-500">{user.email}</p>
 
+        <Link href="/dashboard" className="block text-sm underline">
+          Ver resumen
+        </Link>
         <Link href="/transactions" className="block text-sm underline">
           Ver transacciones
         </Link>

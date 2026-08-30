@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import type { CategoryActionState } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
+import { IconPicker } from "./icon-picker";
 
 const initialState: CategoryActionState = { error: null };
 
@@ -97,18 +98,8 @@ export function CategoryForm({
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="icon" className="text-sm font-medium">
-          Ícono (emoji)
-        </label>
-        <input
-          id="icon"
-          name="icon"
-          type="text"
-          maxLength={4}
-          defaultValue={category?.icon ?? ""}
-          placeholder="🍔"
-          className="w-20 rounded-md border px-3 py-2"
-        />
+        <span className="text-sm font-medium">Ícono</span>
+        <IconPicker defaultValue={category?.icon} />
       </div>
 
       {state.error && (

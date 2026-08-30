@@ -76,10 +76,21 @@ confirmar que borrar una categoría no rompe sus transacciones (quedan con
 
 ## Fase 5 — Vistas de ingresos y gastos
 
-- [ ] Listado de transacciones (paginado o por fecha)
-- [ ] Resumen del período (total ingresos, total gastos, balance)
-- [ ] Gráfico simple de distribución por categoría
-- [ ] Vista mensual/semanal navegable
+- [x] Listado de transacciones (paginado o por fecha) — hecho en Fase 3/4
+      (`/transactions`, filtrable por categoría/etiqueta)
+- [x] Resumen del período (total ingresos, total gastos, balance) — `/dashboard`
+- [x] Gráfico de distribución por categoría — barras animadas, deslizables
+      horizontalmente, con ícono y color por categoría (paleta categórica
+      validada del skill de dataviz — CVD-safe, verificada con el validador)
+- [x] Vista mensual navegable — `/dashboard?month=YYYY-MM` con flechas
+      anterior/siguiente (semanal no implementado, solo mensual)
+- [x] Íconos de categoría desde una biblioteca interna de emojis
+      (`icon-picker.tsx`), ya no texto libre
+- [x] Colores por etiqueta: chips con color asignado de forma determinística
+      por id (misma paleta, identidad estable entre recargas)
+
+Probado extremo a extremo: consulta con joins de categorías/etiquetas contra
+la API real de Supabase, misma forma de datos que usa `/dashboard`.
 
 ## Fase 6 — Deudas
 
