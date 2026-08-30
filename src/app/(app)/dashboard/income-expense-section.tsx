@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
 import { FilterBar } from "@/components/filter-bar";
 
@@ -9,10 +9,6 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
   currency: "COP",
   maximumFractionDigits: 0,
 });
-
-// Ya no hay una barra superior fija en el layout (app), así que el bloque
-// sticky de aquí se pega directo contra el borde superior del viewport.
-const HEADER_OFFSET = 0;
 
 type Option = { id: string; name: string };
 
@@ -33,22 +29,24 @@ export function IncomeExpenseSection({
 }) {
   const [tab, setTab] = useState<"expense" | "income">("expense");
   const [collapsed, setCollapsed] = useState(false);
-  // Centinela de altura fija colocado justo ANTES del bloque sticky: como
-  // está antes en el flujo normal del documento, que el bloque sticky
-  // cambie de alto (al colapsar) no mueve al centinela — así que observar
-  // su visibilidad con IntersectionObserver es seguro y no entra en bucle.
-  const sentinelRef = useRef<HTMLDivElement>(null);
 
+  // Umbral fijo y simple: a los 72px de scroll, colapsa; por debajo de
+  // 40px, se expande de nuevo. La brecha entre los dos evita que oscile
+  // justo en el borde. Deliberadamente NO depende de medir la posición
+  // de ningún elemento (eso fue la causa de los intentos anteriores
+  // fallidos) — solo mira cuánto se ha scrolleado la página.
   useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setCollapsed(!entry.isIntersecting),
-      { threshold: 0 },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
+    function onScroll() {
+      const y = window.scrollY;
+      setCollapsed((prev) => {
+        if (!prev && y > 72) return true;
+        if (prev && y < 40) return false;
+        return prev;
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -84,12 +82,9 @@ export function IncomeExpenseSection({
         </button>
       </div>
 
-      <div ref={sentinelRef} aria-hidden="true" />
-
       <div
-        className="sticky z-10 -mx-5 space-y-2 bg-page px-5 transition-[padding] duration-300"
+        className="sticky top-0 z-10 -mx-5 space-y-2 bg-page px-5 transition-[padding] duration-300"
         style={{
-          top: HEADER_OFFSET,
           paddingTop: collapsed ? 6 : 12,
           paddingBottom: collapsed ? 6 : 12,
         }}
