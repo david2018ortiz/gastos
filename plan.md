@@ -122,9 +122,21 @@ confirmando que el trigger deja `current_amount` exactamente en
 
 ## Fase 8 — Alertas
 
-- [ ] Definir reglas de alerta (ej. gasto supera presupuesto de categoría, deuda próxima a vencer, meta de ahorro estancada)
-- [ ] Job/lógica que evalúa alertas activas
-- [ ] Centro de notificaciones dentro de la app (badge, listado)
+- [x] Definir reglas de alerta — `/alerts/new`: presupuesto de categoría,
+      deuda próxima a vencer, meta de ahorro estancada
+- [x] Lógica que evalúa alertas activas — `evaluate-alerts.ts`; **no hay un
+      job en segundo plano** (no hay pg_cron/Edge Function desplegado),
+      se evalúa "en caliente" cada vez que se visita `/dashboard` o
+      `/alerts`, actualizando el `status` de cada alerta en la base de
+      datos. Suficiente para el uso normal de la app; si se necesita
+      evaluación sin abrir la app (ej. para push notifications) haría
+      falta un cron real más adelante.
+- [x] Centro de notificaciones dentro de la app — `/alerts` (listado de
+      disparadas + reglas configuradas) y badge con contador en `/dashboard`
+
+Probado extremo a extremo: presupuesto superado, deuda por vencer y meta
+recién creada (que correctamente NO dispara antes del umbral de días),
+verificado con datos reales contra la API de Supabase.
 
 ## Fase 9 — Perfil avanzado / consumo de IA
 

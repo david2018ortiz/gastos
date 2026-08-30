@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { evaluateAlerts } from "@/lib/evaluate-alerts";
 import { PeriodNav } from "./period-nav";
 import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
 import { TagChips, type TagChipDatum } from "./tag-chips";
@@ -40,6 +41,8 @@ export default async function DashboardPage({
   }
 
   const { start, end } = monthRange(month);
+
+  const triggeredAlerts = await evaluateAlerts(supabase, user.id);
 
   const { data: transactions } = await supabase
     .from("transactions")
@@ -94,9 +97,19 @@ export default async function DashboardPage({
       <div className="mx-auto max-w-sm space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Resumen</h1>
-          <Link href="/transactions" className="text-sm underline">
-            Transacciones
-          </Link>
+          <div className="flex items-center gap-3 text-sm">
+            <Link href="/alerts" className="relative underline">
+              Alertas
+              {triggeredAlerts.length > 0 && (
+                <span className="absolute -right-3 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#d03b3b] px-1 text-[10px] font-semibold text-white">
+                  {triggeredAlerts.length}
+                </span>
+              )}
+            </Link>
+            <Link href="/transactions" className="underline">
+              Transacciones
+            </Link>
+          </div>
         </div>
 
         <PeriodNav month={month} />
