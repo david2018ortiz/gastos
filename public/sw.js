@@ -27,6 +27,9 @@ self.addEventListener("activate", (event) => {
 // (transacciones, saldos) y solo sirve el shell cacheado si no hay red.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // Ignora peticiones que no sean http(s) (ej. chrome-extension://): el
+  // Cache API no las soporta y cache.put() lanzaría un error.
+  if (!event.request.url.startsWith("http")) return;
 
   event.respondWith(
     fetch(event.request)

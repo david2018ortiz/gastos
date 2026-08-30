@@ -39,7 +39,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <ThemeScript />
       </head>
-      <body className="min-h-full flex flex-col bg-page text-ink">
+      <body
+        className="min-h-full flex flex-col bg-page text-ink"
+        suppressHydrationWarning
+      >
         <PageTransition>{children}</PageTransition>
         <RegisterServiceWorker />
       </body>
