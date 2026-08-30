@@ -18,12 +18,15 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 ## Fase 1 — Autenticación y perfil
 
-- [ ] Registro / login con email y contraseña (Supabase Auth)
-- [ ] Sign in with Apple
-- [ ] Pantalla de perfil: editar nombre, teléfono, edad
-- [ ] Cambiar contraseña
-- [ ] Cerrar sesión
-- [ ] Tabla `profiles` con RLS (cada usuario ve solo lo suyo)
+- [x] Registro / login con email y contraseña (Supabase Auth)
+- [x] Sign in with Apple — código listo (`signInWithOAuth` + callback route);
+      falta configurar el proveedor Apple en el dashboard de Supabase con
+      credenciales reales de Apple Developer (pendiente, requiere cuenta de
+      pago de Apple Developer que el asistente no puede crear)
+- [x] Pantalla de perfil: editar nombre, teléfono, edad
+- [x] Cambiar contraseña
+- [x] Cerrar sesión
+- [x] Tabla `profiles` con RLS (cada usuario ve solo lo suyo)
 
 ## Fase 2 — Modelo de datos base
 
