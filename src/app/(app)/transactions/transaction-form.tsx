@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonClasses } from "@/components/button-styles";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { useActionState } from "react";
 import { createTransaction, updateTransaction } from "./actions";
@@ -62,16 +63,7 @@ export function TransactionForm({
         <label htmlFor="amount" className="text-sm font-medium">
           Monto
         </label>
-        <input
-          id="amount"
-          name="amount"
-          type="number"
-          step="0.01"
-          min="0.01"
-          required
-          defaultValue={transaction?.amount ?? ""}
-          className="w-full rounded-md border px-3 py-2"
-        />
+        <CurrencyInput id="amount" name="amount" required defaultValue={transaction?.amount} />
       </div>
 
       <div className="space-y-1">

@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonClasses } from "@/components/button-styles";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { useActionState } from "react";
 import type { DebtActionState } from "./actions";
@@ -46,15 +47,7 @@ export function DebtForm({
           <label htmlFor="totalAmount" className="text-sm font-medium">
             Monto total
           </label>
-          <input
-            id="totalAmount"
-            name="totalAmount"
-            type="number"
-            step="0.01"
-            min="0.01"
-            required
-            className="w-full rounded-md border px-3 py-2"
-          />
+          <CurrencyInput id="totalAmount" name="totalAmount" required />
         </div>
       )}
 

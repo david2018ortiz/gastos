@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonClasses } from "@/components/button-styles";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { useActionState } from "react";
 import { addDebtPayment } from "../actions";
@@ -20,15 +21,9 @@ export function PaymentForm({ debtId }: { debtId: string }) {
       <input type="hidden" name="debtId" value={debtId} />
 
       <div className="flex gap-2">
-        <input
-          name="amount"
-          type="number"
-          step="0.01"
-          min="0.01"
-          required
-          placeholder="Monto del abono"
-          className="flex-1 rounded-md border px-3 py-2"
-        />
+        <div className="flex-1">
+          <CurrencyInput name="amount" required />
+        </div>
         <input
           name="paidAt"
           type="date"

@@ -10,9 +10,9 @@
   --ink-muted: #666460;
   --border: #e1e0d9;
   --border-strong: #c3c2b7;
-  --brand: #8ca0b5;
-  --brand-strong: #71889d;
-  --brand-soft: #eef2f5;
+  --brand: #72e3ad;
+  --brand-strong: #4fd196;
+  --brand-soft: #e8faf1;
   --brand-ink: #0b0b0b;
   --positive: #0ca30c;
   --negative: #d03b3b;
@@ -33,9 +33,9 @@
   --ink-muted: #898781;
   --border: #2c2c2a;
   --border-strong: #383835;
-  --brand: #7d94ab;
-  --brand-strong: #93a8bd;
-  --brand-soft: #232a31;
+  --brand: #72e3ad;
+  --brand-strong: #8febc0;
+  --brand-soft: #16332a;
   --brand-ink: #0d0d0d;
   --positive: #0ca30c;
   --negative: #e66767;
@@ -89,4 +89,23 @@ body {
 
 .feedback-enter {
   animation: feedback-in 200ms ease-out;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.8s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
 }

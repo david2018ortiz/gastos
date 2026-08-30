@@ -4,6 +4,7 @@ import { PeriodNav, type Period } from "./period-nav";
 import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
+import { DailyTransactionList } from "./daily-transaction-list";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -87,10 +88,12 @@ export default async function DashboardPage({
   let query = supabase
     .from("transactions")
     .select(
-      "id, type, amount, category_id, categories(id, name, icon), transaction_tags(tags(id, name))",
+      "id, type, amount, occurred_at, note, category_id, categories(id, name, icon), transaction_tags(tags(id, name))",
     )
     .gte("occurred_at", start)
-    .lt("occurred_at", end);
+    .lt("occurred_at", end)
+    .order("occurred_at", { ascending: false })
+    .order("created_at", { ascending: false });
 
   if (params.category) {
     query = query.eq("category_id", params.category);
@@ -206,6 +209,13 @@ export default async function DashboardPage({
             </p>
           </div>
         </div>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-medium text-ink-secondary">
+            Movimientos del período
+          </h2>
+          <DailyTransactionList transactions={rows} />
+        </section>
 
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-ink-secondary">

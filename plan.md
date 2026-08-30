@@ -113,10 +113,24 @@ confirmar que borrar una categoría no rompe sus transacciones (quedan con
 - [x] Colores por etiqueta: chips con color asignado de forma determinística
       por id (misma paleta, identidad estable entre recargas)
 - [x] Menú de navegación persistente (fuera del plan original, pedido por
-      confusión real del usuario para llegar al perfil): barra inferior fija
-      con Resumen/Movimientos/Deudas/Ahorro/Perfil + barra superior con
-      campana de alertas, en un layout compartido `(app)/layout.tsx` para
-      todas las páginas autenticadas
+      confusión real del usuario para llegar al perfil), en un layout
+      compartido `(app)/layout.tsx` para todas las páginas autenticadas.
+      Primera versión: barra inferior fija con íconos — el usuario no la
+      quiso ("la combinación con íconos no es agradable"); reemplazada por
+      un **menú desplegable** de solo texto (`nav-menu.tsx`) desde la barra
+      superior, junto a la campana de alertas
+- [x] Listado de movimientos animado en el resumen, agrupado por fecha y
+      respetando el período/categoría/etiqueta filtrados
+      (`daily-transaction-list.tsx`) — pedido explícitamente por el usuario
+      en vez de que el gráfico de categorías fuera lo único visible
+- [x] Formato de moneda colombiana en todos los campos de monto: separador
+      de miles con punto, decimales con coma, ícono "$" (`currency-input.tsx`,
+      reemplaza los `<input type="number">` sueltos en las 6 formas que
+      capturan dinero)
+- [x] Overlay de entrada por voz a pantalla completa con animación de
+      "escuchando" (anillos pulsantes) y transcripción en vivo, fondo
+      `#e6a5b8` / texto blanco — pedido explícitamente por el usuario en
+      lugar del indicador pequeño inicial
 
 Probado extremo a extremo: consulta con joins de categorías/etiquetas contra
 la API real de Supabase, misma forma de datos que usa `/dashboard`.
@@ -174,12 +188,13 @@ verificado con datos reales contra la API de Supabase.
 
 ## Fase 10 — Diseño y pulido
 
-- [x] Paleta de color y tipografía distintiva — ajustada dos veces por
-      feedback directo del usuario: primero un verde de marca (rechazado por
-      "contraste alto"), ahora un **pastel apagado azul grisáceo** (`--brand:
-      #8ca0b5`, texto oscuro sobre el pastel en vez de blanco) + tipografía
-      Manrope; tokens centralizados en `globals.css` (`--brand`, `--ink`,
-      `--surface`, `--page`, `--border`, `--positive`, `--negative`,
+- [x] Paleta de color y tipografía distintiva — ajustada tres veces por
+      feedback directo del usuario: verde de marca inicial (rechazado por
+      "contraste alto") → pastel azul grisáceo (rechazado, "quitar ese
+      gris") → **verde `#72e3ad`** (elegido explícitamente por el usuario),
+      texto oscuro sobre el color en vez de blanco (contraste 12.47:1) +
+      tipografía Manrope; tokens centralizados en `globals.css` (`--brand`,
+      `--ink`, `--surface`, `--page`, `--border`, `--positive`, `--negative`,
       `--warning`); los colores categóricos del gráfico de la Fase 5 se
       mantienen aparte (identidad de datos, no decoración)
 - [x] Animaciones de transición entre pantallas — Framer Motion

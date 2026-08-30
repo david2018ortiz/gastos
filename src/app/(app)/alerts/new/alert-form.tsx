@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonClasses } from "@/components/button-styles";
+import { CurrencyInput } from "@/components/currency-input";
 
 import { useActionState, useState } from "react";
 import { createAlert } from "../actions";
@@ -72,15 +73,7 @@ export function AlertForm({
             <label htmlFor="budgetAmount" className="text-sm font-medium">
               Presupuesto mensual
             </label>
-            <input
-              id="budgetAmount"
-              name="budgetAmount"
-              type="number"
-              step="0.01"
-              min="0.01"
-              required
-              className="w-full rounded-md border px-3 py-2"
-            />
+            <CurrencyInput id="budgetAmount" name="budgetAmount" required />
           </div>
         </>
       )}

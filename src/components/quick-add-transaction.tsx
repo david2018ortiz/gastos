@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { quickAddTransaction } from "@/app/(app)/transactions/actions";
 import type { QuickAddState } from "@/app/(app)/transactions/actions";
 import { buttonClasses } from "@/components/button-styles";
+import { CurrencyInput } from "@/components/currency-input";
 
 type Category = { id: string; name: string; icon: string | null; type: string };
 
@@ -40,8 +41,9 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
   const [categoryId, setCategoryId] = useState("");
   const [note, setNote] = useState("");
   const [listening, setListening] = useState(false);
+  const [liveTranscript, setLiveTranscript] = useState("");
   const [speechSupported, setSpeechSupported] = useState(false);
-  const amountInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   useEffect(() => {
     setSpeechSupported(
@@ -49,12 +51,6 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
         ("SpeechRecognition" in window || "webkitSpeechRecognition" in window),
     );
   }, []);
-
-  useEffect(() => {
-    if (open) {
-      setTimeout(() => amountInputRef.current?.focus(), 50);
-    }
-  }, [open]);
 
   useEffect(() => {
     if (state.success) {
@@ -76,23 +72,42 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
     if (!SpeechRecognitionCtor) return;
 
     const recognition = new SpeechRecognitionCtor();
+    recognitionRef.current = recognition;
     recognition.lang = "es-CO";
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
-    recognition.onstart = () => setListening(true);
+    recognition.onstart = () => {
+      setLiveTranscript("");
+      setListening(true);
+    };
     recognition.onend = () => setListening(false);
     recognition.onerror = () => setListening(false);
     recognition.onresult = (event: SpeechRecognitionResultEventLike) => {
-      const transcript = event.results[0]?.[0]?.transcript ?? "";
-      const parsed = parseSpeech(transcript, categories);
-      setAmount(parsed.amount);
-      setType(parsed.type as "expense" | "income");
-      setCategoryId(parsed.categoryId);
-      setNote(parsed.note);
+      let combined = "";
+      for (let i = 0; i < event.results.length; i++) {
+        combined += event.results[i]?.[0]?.transcript ?? "";
+      }
+      setLiveTranscript(combined);
+
+      const lastResult = event.results[event.results.length - 1];
+      if (lastResult?.isFinal) {
+        const parsed = parseSpeech(combined, categories);
+        setAmount(parsed.amount);
+        setType(parsed.type as "expense" | "income");
+        setCategoryId(parsed.categoryId);
+        setNote(parsed.note);
+        recognition.stop();
+      }
     };
 
+    setOpen(true);
     recognition.start();
+  }
+
+  function cancelListening() {
+    recognitionRef.current?.stop();
+    setListening(false);
   }
 
   const filteredCategories = categories.filter((c) => c.type === type);
@@ -102,14 +117,17 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-2xl text-brand-ink shadow-lg transition-transform active:scale-95"
+        className="fixed bottom-6 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-2xl text-brand-ink shadow-lg transition-transform active:scale-95"
         aria-label="Agregar transacción rápido"
       >
         +
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/30" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-40 flex items-end justify-center bg-black/30"
+          onClick={() => !listening && setOpen(false)}
+        >
           <div
             className="w-full max-w-sm rounded-t-2xl bg-surface p-5 pb-8 feedback-enter"
             onClick={(e) => e.stopPropagation()}
@@ -161,36 +179,22 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
                     type="button"
                     onClick={startListening}
                     aria-label="Registrar por voz"
-                    className={
-                      "flex h-10 w-10 items-center justify-center rounded-full text-lg " +
-                      (listening ? "animate-pulse bg-brand text-brand-ink" : "bg-surface-raised")
-                    }
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-lg"
                   >
                     🎙️
                   </button>
                 )}
               </div>
 
-              <input
-                ref={amountInputRef}
-                type="number"
-                inputMode="decimal"
-                step="0.01"
-                min="0.01"
-                required
-                placeholder="Monto"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="w-full rounded-md border px-3 py-3 text-lg"
+              <CurrencyInput
                 name="amount"
+                required
+                value={amount}
+                onValueChange={setAmount}
+                className="w-full rounded-md border py-3 pl-7 pr-3 text-lg tabular-nums"
               />
 
-              {listening && (
-                <p className="text-xs text-brand-strong feedback-enter">
-                  Escuchando…
-                </p>
-              )}
-              {note && !listening && (
+              {note && (
                 <p className="text-xs text-ink-muted feedback-enter">“{note}”</p>
               )}
 
@@ -230,19 +234,57 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
           </div>
         </div>
       )}
+
+      {listening && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-[#e6a5b8] px-6 py-16 feedback-enter"
+          role="dialog"
+          aria-label="Escuchando"
+        >
+          <p className="text-sm font-medium text-white/80">Escuchando…</p>
+
+          <div className="relative flex h-32 w-32 items-center justify-center">
+            <span className="pulse-ring absolute inset-0 rounded-full bg-white/40" />
+            <span
+              className="pulse-ring absolute inset-0 rounded-full bg-white/40"
+              style={{ animationDelay: "0.6s" }}
+            />
+            <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white text-4xl">
+              🎙️
+            </span>
+          </div>
+
+          <div className="w-full max-w-sm space-y-6 text-center">
+            <p className="min-h-16 text-xl font-medium leading-snug text-white">
+              {liveTranscript || "Di algo como “gasté 25 mil en comida”"}
+            </p>
+            <button
+              type="button"
+              onClick={cancelListening}
+              className="min-h-11 rounded-full bg-white/20 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-white/30"
+            >
+              Detener
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
 
 // Tipado mínimo de Web Speech API (no incluido en lib.dom.d.ts estándar).
 interface SpeechRecognitionResultEventLike {
-  results: { [index: number]: { [index: number]: { transcript: string } } };
+  results: {
+    length: number;
+    [index: number]: { isFinal: boolean; [index: number]: { transcript: string } };
+  };
 }
 interface SpeechRecognitionLike {
   lang: string;
   interimResults: boolean;
   maxAlternatives: number;
   start: () => void;
+  stop: () => void;
   onstart: () => void;
   onend: () => void;
   onerror: () => void;
