@@ -55,7 +55,7 @@ export default async function DebtDetailPage({
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             Monto total: {currencyFormatter.format(debt.total_amount)}
           </p>
           <DebtProgress
@@ -65,25 +65,25 @@ export default async function DebtDetailPage({
         </div>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Registrar abono
           </h2>
           <PaymentForm debtId={debt.id} />
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Historial de abonos
           </h2>
           {!payments || payments.length === 0 ? (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-ink-muted">
               Todavía no has registrado abonos.
             </p>
           ) : (
             <ul className="divide-y">
               {payments.map((p) => (
                 <li key={p.id} className="py-2 flex items-center justify-between">
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-ink-muted">
                     {dateFormatter.format(new Date(p.paid_at + "T00:00:00"))}
                   </span>
                   <span className="text-sm font-medium tabular-nums">

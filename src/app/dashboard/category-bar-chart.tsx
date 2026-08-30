@@ -27,7 +27,7 @@ export function CategoryBarChart({ data }: { data: CategoryBarDatum[] }) {
 
   if (data.length === 0) {
     return (
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-ink-muted">
         Sin gastos registrados en este período.
       </p>
     );
@@ -51,7 +51,7 @@ export function CategoryBarChart({ data }: { data: CategoryBarDatum[] }) {
             className="flex flex-col items-center gap-2 shrink-0 snap-start"
             style={{ width: 56 }}
           >
-            <span className="text-xs font-medium text-neutral-700 tabular-nums">
+            <span className="text-xs font-medium text-ink-secondary tabular-nums">
               {currencyFormatter.format(d.total)}
             </span>
 
@@ -72,7 +72,7 @@ export function CategoryBarChart({ data }: { data: CategoryBarDatum[] }) {
               {d.icon ?? "🏷️"}
             </span>
 
-            <span className="max-w-[64px] truncate text-center text-xs text-neutral-600">
+            <span className="max-w-[64px] truncate text-center text-xs text-ink-secondary">
               {d.name}
             </span>
           </div>

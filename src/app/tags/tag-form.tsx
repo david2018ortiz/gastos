@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClasses } from "@/components/button-styles";
+
 import { useActionState, useRef, useEffect } from "react";
 import { createTag } from "./actions";
 import type { TagActionState } from "./actions";
@@ -28,12 +30,12 @@ export function TagForm() {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-black text-white px-4 py-2 font-medium disabled:opacity-50"
+        className={buttonClasses.primaryInline}
       >
         {pending ? "…" : "Agregar"}
       </button>
       {state.error && (
-        <p className="text-sm text-red-600 basis-full" role="alert">
+        <p className="text-sm text-negative basis-full feedback-enter" role="alert">
           {state.error}
         </p>
       )}

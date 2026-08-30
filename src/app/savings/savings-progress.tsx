@@ -27,17 +27,17 @@ export function SavingsProgress({
 
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between text-xs text-neutral-500">
+      <div className="flex items-center justify-between text-xs text-ink-muted">
         <span>{currencyFormatter.format(currentAmount)} ahorrado</span>
         <span className="tabular-nums">{Math.round(pct)}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-[#cde2fb]">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-border">
         <div
-          className="h-full rounded-full bg-[#2a78d6] transition-[width] duration-700 ease-out"
+          className="h-full rounded-full bg-brand transition-[width] duration-700 ease-out"
           style={{ width: mounted ? `${pct}%` : "0%" }}
         />
       </div>
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-ink-muted">
         Meta: {currencyFormatter.format(targetAmount)}
       </p>
     </div>

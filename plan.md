@@ -145,12 +145,28 @@ verificado con datos reales contra la API de Supabase.
 
 ## Fase 10 — Diseño y pulido
 
-- [ ] Definir paleta de color y tipografía distintiva del proyecto
-- [ ] Animaciones de transición entre pantallas (Framer Motion o similar)
-- [ ] Micro-interacciones (feedback al guardar transacción, progreso de metas, etc.)
-- [ ] Modo claro/oscuro
-- [ ] Revisión de accesibilidad (contraste, tamaños táctiles)
-- [ ] Prueba completa en iPhone real como PWA instalada
+- [x] Paleta de color y tipografía distintiva — verde de marca `#146152`
+      (un solo acento, minimalista, sin arcoíris) + tipografía Manrope;
+      tokens centralizados en `globals.css` (`--brand`, `--ink`, `--surface`,
+      `--page`, `--border`, `--positive`, `--negative`, `--warning`); los
+      colores categóricos del gráfico de la Fase 5 se mantienen aparte
+      (identidad de datos, no decoración)
+- [x] Animaciones de transición entre pantallas — Framer Motion
+      (`PageTransition`, fade + slide sutil en cada navegación)
+- [x] Micro-interacciones — botones con `active:scale-95` y hover, mensajes
+      de error/éxito con animación de entrada (`feedback-enter`), barras de
+      progreso/gráfico que ya animaban desde la Fase 5/6/7
+- [x] Modo claro/oscuro — toggle de 3 estados (sistema/claro/oscuro) en el
+      perfil, persistido en `localStorage`, sin flash gracias a un script
+      inline que aplica el tema antes del primer paint; todos los tokens
+      tienen su variante oscura
+- [x] Revisión de accesibilidad — botones primarios con altura mínima de
+      44px (`min-h-11`); contraste verificado por cálculo (WCAG): marca vs.
+      blanco 7.34:1, texto secundario 7.53:1, texto muted ajustado de
+      3.41:1 a 5.60:1 (AA) tras la revisión, verde/rojo de marca de la
+      Fase 5 claros en ambos modos
+- [ ] Prueba completa en iPhone real como PWA instalada — pendiente, requiere
+      un dispositivo físico (ver Fase 0)
 
 ## Fase 11 — Colaboración / cuentas compartidas (familiar)
 

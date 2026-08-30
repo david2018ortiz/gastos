@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteCategory } from "./actions";
+import { buttonClasses } from "@/components/button-styles";
 
 export default async function CategoriesPage() {
   const supabase = await createClient();
@@ -26,14 +27,14 @@ export default async function CategoriesPage() {
           <h1 className="text-2xl font-semibold">Categorías</h1>
           <Link
             href="/categories/new"
-            className="rounded-md bg-black text-white px-3 py-1.5 text-sm font-medium"
+            className={buttonClasses.primaryInline}
           >
             Nueva
           </Link>
         </div>
 
         {!categories || categories.length === 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             Todavía no tienes categorías.
           </p>
         ) : (
@@ -52,7 +53,7 @@ export default async function CategoriesPage() {
                   </span>
                   <div>
                     <p className="text-sm font-medium">{category.name}</p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-xs text-ink-muted">
                       {category.type === "income" ? "Ingreso" : "Gasto"}
                     </p>
                   </div>
@@ -66,7 +67,7 @@ export default async function CategoriesPage() {
                   </Link>
                   <form action={deleteCategory}>
                     <input type="hidden" name="id" value={category.id} />
-                    <button type="submit" className="text-red-600 underline">
+                    <button type="submit" className="text-negative underline">
                       Eliminar
                     </button>
                   </form>

@@ -4,6 +4,17 @@ import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 import { ProfileForm } from "./profile-form";
 import { ChangePasswordForm } from "./change-password-form";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+const navLinks = [
+  { href: "/dashboard", label: "Resumen" },
+  { href: "/transactions", label: "Transacciones" },
+  { href: "/categories", label: "Categorías" },
+  { href: "/tags", label: "Etiquetas" },
+  { href: "/debts", label: "Deudas" },
+  { href: "/savings", label: "Ahorro" },
+  { href: "/alerts", label: "Alertas" },
+];
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -30,30 +41,32 @@ export default async function ProfilePage() {
       <div className="mx-auto max-w-sm space-y-10">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Perfil</h1>
-          <form action={signOut}>
-            <button type="submit" className="text-sm underline">
-              Cerrar sesión
-            </button>
-          </form>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="inline-flex min-h-9 items-center text-sm text-ink-secondary underline underline-offset-2"
+              >
+                Salir
+              </button>
+            </form>
+          </div>
         </div>
 
-        <p className="text-sm text-neutral-500">{user.email}</p>
+        <p className="text-sm text-ink-muted">{user.email}</p>
 
-        <Link href="/dashboard" className="block text-sm underline">
-          Ver resumen
-        </Link>
-        <Link href="/transactions" className="block text-sm underline">
-          Ver transacciones
-        </Link>
-        <Link href="/debts" className="block text-sm underline">
-          Ver deudas
-        </Link>
-        <Link href="/savings" className="block text-sm underline">
-          Ver ahorro
-        </Link>
-        <Link href="/alerts" className="block text-sm underline">
-          Ver alertas
-        </Link>
+        <nav className="grid grid-cols-2 gap-2">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-lg border border-border p-3 text-sm text-ink transition-colors hover:bg-surface-raised"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
         <section className="space-y-4">
           <h2 className="text-lg font-medium">Datos personales</h2>

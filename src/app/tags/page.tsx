@@ -27,7 +27,7 @@ export default async function TagsPage() {
         <TagForm />
 
         {!tags || tags.length === 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             Todavía no tienes etiquetas.
           </p>
         ) : (
@@ -43,7 +43,7 @@ export default async function TagsPage() {
                   <button
                     type="submit"
                     aria-label={`Eliminar etiqueta ${tag.name}`}
-                    className="text-neutral-400 hover:text-red-600"
+                    className="text-ink-muted hover:text-negative"
                   >
                     ×
                   </button>

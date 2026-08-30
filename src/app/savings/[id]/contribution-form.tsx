@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClasses } from "@/components/button-styles";
+
 import { useActionState } from "react";
 import { addSavingsContribution } from "../actions";
 import type { ContributionActionState } from "../actions";
@@ -36,7 +38,7 @@ export function ContributionForm({ goalId }: { goalId: string }) {
       </div>
 
       {state.error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-negative feedback-enter" role="alert">
           {state.error}
         </p>
       )}
@@ -44,7 +46,7 @@ export function ContributionForm({ goalId }: { goalId: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-black text-white py-2 font-medium disabled:opacity-50"
+        className={buttonClasses.primary}
       >
         {pending ? "Registrando…" : "Registrar aporte"}
       </button>

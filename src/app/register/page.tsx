@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClasses } from "@/components/button-styles";
+
 import Link from "next/link";
 import { useActionState } from "react";
 import { signUp, type AuthActionState } from "@/app/auth/actions";
@@ -59,7 +61,7 @@ export default function RegisterPage() {
           </div>
 
           {state.error && (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-negative feedback-enter" role="alert">
               {state.error}
             </p>
           )}
@@ -67,21 +69,21 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-md bg-black text-white py-2 font-medium disabled:opacity-50"
+            className={buttonClasses.primary}
           >
             {pending ? "Creando cuenta…" : "Crear cuenta"}
           </button>
         </form>
 
-        <div className="flex items-center gap-3 text-sm text-neutral-500">
-          <div className="h-px flex-1 bg-neutral-200" />
+        <div className="flex items-center gap-3 text-sm text-ink-muted">
+          <div className="h-px flex-1 bg-border" />
           o
-          <div className="h-px flex-1 bg-neutral-200" />
+          <div className="h-px flex-1 bg-border" />
         </div>
 
         <AppleSignInButton />
 
-        <p className="text-sm text-center text-neutral-600">
+        <p className="text-sm text-center text-ink-secondary">
           ¿Ya tienes cuenta?{" "}
           <Link href="/login" className="underline">
             Inicia sesión

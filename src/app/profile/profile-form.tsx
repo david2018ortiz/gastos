@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClasses } from "@/components/button-styles";
+
 import { useActionState } from "react";
 import { updateProfile } from "./actions";
 import type { ProfileActionState } from "./actions";
@@ -54,12 +56,12 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
       </div>
 
       {state.error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-negative feedback-enter" role="alert">
           {state.error}
         </p>
       )}
       {state.success && (
-        <p className="text-sm text-green-600" role="status">
+        <p className="text-sm text-positive feedback-enter" role="status">
           Perfil guardado.
         </p>
       )}
@@ -67,7 +69,7 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-black text-white px-4 py-2 font-medium disabled:opacity-50"
+        className={buttonClasses.primaryInline}
       >
         {pending ? "Guardando…" : "Guardar cambios"}
       </button>

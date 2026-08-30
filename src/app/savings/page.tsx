@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SavingsProgress } from "./savings-progress";
 import { deleteSavingsGoal } from "./actions";
+import { buttonClasses } from "@/components/button-styles";
 
 export default async function SavingsPage() {
   const supabase = await createClient();
@@ -27,14 +28,14 @@ export default async function SavingsPage() {
           <h1 className="text-2xl font-semibold">Ahorro</h1>
           <Link
             href="/savings/new"
-            className="rounded-md bg-black text-white px-3 py-1.5 text-sm font-medium"
+            className={buttonClasses.primaryInline}
           >
             Nueva meta
           </Link>
         </div>
 
         {!goals || goals.length === 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             Todavía no tienes metas de ahorro.
           </p>
         ) : (
@@ -51,7 +52,7 @@ export default async function SavingsPage() {
                     </Link>
                     <form action={deleteSavingsGoal}>
                       <input type="hidden" name="id" value={goal.id} />
-                      <button type="submit" className="text-red-600 underline">
+                      <button type="submit" className="text-negative underline">
                         Eliminar
                       </button>
                     </form>
@@ -64,7 +65,7 @@ export default async function SavingsPage() {
                 />
 
                 {goal.target_date && (
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-ink-muted">
                     Plazo: {goal.target_date}
                   </p>
                 )}

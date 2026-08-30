@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteTransaction } from "./actions";
+import { buttonClasses } from "@/components/button-styles";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -67,7 +68,7 @@ export default async function TransactionsPage({
           <h1 className="text-2xl font-semibold">Transacciones</h1>
           <Link
             href="/transactions/new"
-            className="rounded-md bg-black text-white px-3 py-1.5 text-sm font-medium"
+            className={buttonClasses.primaryInline}
           >
             Nueva
           </Link>
@@ -116,7 +117,7 @@ export default async function TransactionsPage({
         </form>
 
         {!transactions || transactions.length === 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             No hay transacciones para mostrar.
           </p>
         ) : (
@@ -127,7 +128,7 @@ export default async function TransactionsPage({
                   <p className="text-sm font-medium">
                     {t.categories?.name ?? "Sin categoría"}
                   </p>
-                  <p className="text-xs text-neutral-500 truncate">
+                  <p className="text-xs text-ink-muted truncate">
                     {dateFormatter.format(new Date(t.occurred_at + "T00:00:00"))}
                     {t.note ? ` · ${t.note}` : ""}
                   </p>
@@ -136,7 +137,7 @@ export default async function TransactionsPage({
                   <span
                     className={
                       "text-sm font-semibold " +
-                      (t.type === "income" ? "text-green-600" : "text-red-600")
+                      (t.type === "income" ? "text-positive" : "text-negative")
                     }
                   >
                     {t.type === "income" ? "+" : "-"}
@@ -152,7 +153,7 @@ export default async function TransactionsPage({
                     <input type="hidden" name="id" value={t.id} />
                     <button
                       type="submit"
-                      className="text-xs text-red-600 underline"
+                      className="text-xs text-negative underline"
                     >
                       Eliminar
                     </button>

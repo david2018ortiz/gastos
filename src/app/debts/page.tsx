@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DebtProgress } from "./debt-progress";
 import { deleteDebt } from "./actions";
+import { buttonClasses } from "@/components/button-styles";
 
 export default async function DebtsPage() {
   const supabase = await createClient();
@@ -27,14 +28,14 @@ export default async function DebtsPage() {
           <h1 className="text-2xl font-semibold">Deudas</h1>
           <Link
             href="/debts/new"
-            className="rounded-md bg-black text-white px-3 py-1.5 text-sm font-medium"
+            className={buttonClasses.primaryInline}
           >
             Nueva
           </Link>
         </div>
 
         {!debts || debts.length === 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-muted">
             Todavía no tienes deudas registradas.
           </p>
         ) : (
@@ -51,7 +52,7 @@ export default async function DebtsPage() {
                     </Link>
                     <form action={deleteDebt}>
                       <input type="hidden" name="id" value={debt.id} />
-                      <button type="submit" className="text-red-600 underline">
+                      <button type="submit" className="text-negative underline">
                         Eliminar
                       </button>
                     </form>
@@ -64,7 +65,7 @@ export default async function DebtsPage() {
                 />
 
                 {debt.due_date && (
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-ink-muted">
                     Vence: {debt.due_date}
                   </p>
                 )}

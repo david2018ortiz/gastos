@@ -60,25 +60,25 @@ export default async function SavingsGoalDetailPage({
         />
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Registrar aporte
           </h2>
           <ContributionForm goalId={goal.id} />
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Historial de aportes
           </h2>
           {!contributions || contributions.length === 0 ? (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-ink-muted">
               Todavía no has registrado aportes.
             </p>
           ) : (
             <ul className="divide-y">
               {contributions.map((c) => (
                 <li key={c.id} className="py-2 flex items-center justify-between">
-                  <span className="text-xs text-neutral-500">
+                  <span className="text-xs text-ink-muted">
                     {dateFormatter.format(new Date(c.contributed_at + "T00:00:00"))}
                   </span>
                   <span className="text-sm font-medium tabular-nums">

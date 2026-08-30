@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { evaluateAlerts } from "@/lib/evaluate-alerts";
 import { deleteAlert, dismissAlert } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
+import { buttonClasses } from "@/components/button-styles";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -50,21 +51,21 @@ export default async function AlertsPage() {
           <h1 className="text-2xl font-semibold">Alertas</h1>
           <Link
             href="/alerts/new"
-            className="rounded-md bg-black text-white px-3 py-1.5 text-sm font-medium"
+            className={buttonClasses.primaryInline}
           >
             Nueva
           </Link>
         </div>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             {triggered.length > 0
               ? `${triggered.length} alerta(s) activa(s)`
               : "Sin alertas activas"}
           </h2>
 
           {triggered.length === 0 ? (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-ink-muted">
               Todo tranquilo por ahora.
             </p>
           ) : (
@@ -72,7 +73,7 @@ export default async function AlertsPage() {
               {triggered.map((alert) => (
                 <li
                   key={alert.id}
-                  className="flex items-start justify-between gap-3 rounded-lg border border-[#fab21980] bg-[#fab21914] p-3"
+                  className="flex items-start justify-between gap-3 rounded-lg border border-warning/50 bg-warning/10 p-3 feedback-enter"
                 >
                   <p className="text-sm">{alert.message}</p>
                   <form action={dismissAlert}>
@@ -88,11 +89,11 @@ export default async function AlertsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Reglas configuradas
           </h2>
           {!allAlerts || allAlerts.length === 0 ? (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-ink-muted">
               No has creado ninguna alerta todavía.
             </p>
           ) : (
@@ -101,13 +102,13 @@ export default async function AlertsPage() {
                 <li key={alert.id} className="py-3 flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm">{describeRule(alert)}</p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-xs text-ink-muted">
                       {alert.status === "triggered" ? "Disparada" : "En espera"}
                     </p>
                   </div>
                   <form action={deleteAlert}>
                     <input type="hidden" name="id" value={alert.id} />
-                    <button type="submit" className="shrink-0 text-xs text-red-600 underline">
+                    <button type="submit" className="shrink-0 text-xs text-negative underline">
                       Eliminar
                     </button>
                   </form>

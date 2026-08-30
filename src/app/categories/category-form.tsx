@@ -1,5 +1,7 @@
 "use client";
 
+import { buttonClasses } from "@/components/button-styles";
+
 import { useActionState } from "react";
 import type { CategoryActionState } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
@@ -103,7 +105,7 @@ export function CategoryForm({
       </div>
 
       {state.error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-negative feedback-enter" role="alert">
           {state.error}
         </p>
       )}
@@ -111,7 +113,7 @@ export function CategoryForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-black text-white py-2 font-medium disabled:opacity-50"
+        className={buttonClasses.primary}
       >
         {pending ? "Guardando…" : submitLabel}
       </button>

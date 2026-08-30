@@ -31,8 +31,8 @@ export function IconPicker({ defaultValue }: { defaultValue?: string | null }) {
             className={
               "flex h-8 w-8 items-center justify-center rounded-md text-base " +
               (icon === selected
-                ? "bg-black text-white"
-                : "hover:bg-neutral-100")
+                ? "bg-brand text-white"
+                : "hover:bg-surface-raised")
             }
           >
             {icon}
@@ -40,7 +40,7 @@ export function IconPicker({ defaultValue }: { defaultValue?: string | null }) {
         ))}
       </div>
       {selected && (
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-ink-muted">
           Seleccionado: <span className="text-base">{selected}</span>
         </p>
       )}

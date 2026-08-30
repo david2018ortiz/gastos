@@ -101,7 +101,7 @@ export default async function DashboardPage({
             <Link href="/alerts" className="relative underline">
               Alertas
               {triggeredAlerts.length > 0 && (
-                <span className="absolute -right-3 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#d03b3b] px-1 text-[10px] font-semibold text-white">
+                <span className="absolute -right-3 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-negative px-1 text-[10px] font-semibold text-white">
                   {triggeredAlerts.length}
                 </span>
               )}
@@ -116,23 +116,23 @@ export default async function DashboardPage({
 
         <div className="grid grid-cols-3 gap-2 text-center">
           <div className="rounded-lg border p-3">
-            <p className="text-xs text-neutral-500">Ingresos</p>
-            <p className="text-sm font-semibold text-green-600 tabular-nums">
+            <p className="text-xs text-ink-muted">Ingresos</p>
+            <p className="text-sm font-semibold text-positive tabular-nums">
               {currencyFormatter.format(totalIncome)}
             </p>
           </div>
           <div className="rounded-lg border p-3">
-            <p className="text-xs text-neutral-500">Gastos</p>
-            <p className="text-sm font-semibold text-red-600 tabular-nums">
+            <p className="text-xs text-ink-muted">Gastos</p>
+            <p className="text-sm font-semibold text-negative tabular-nums">
               {currencyFormatter.format(totalExpense)}
             </p>
           </div>
           <div className="rounded-lg border p-3">
-            <p className="text-xs text-neutral-500">Balance</p>
+            <p className="text-xs text-ink-muted">Balance</p>
             <p
               className={
                 "text-sm font-semibold tabular-nums " +
-                (balance >= 0 ? "text-green-600" : "text-red-600")
+                (balance >= 0 ? "text-positive" : "text-negative")
               }
             >
               {currencyFormatter.format(balance)}
@@ -141,7 +141,7 @@ export default async function DashboardPage({
         </div>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-neutral-700">
+          <h2 className="text-sm font-medium text-ink-secondary">
             Gasto por categoría
           </h2>
           <CategoryBarChart data={categoryData} />
@@ -149,7 +149,7 @@ export default async function DashboardPage({
 
         {tagData.length > 0 && (
           <section className="space-y-3">
-            <h2 className="text-sm font-medium text-neutral-700">
+            <h2 className="text-sm font-medium text-ink-secondary">
               Etiquetas del período
             </h2>
             <TagChips tags={tagData} />

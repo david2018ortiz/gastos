@@ -27,17 +27,17 @@ export function DebtProgress({
 
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between text-xs text-neutral-500">
+      <div className="flex items-center justify-between text-xs text-ink-muted">
         <span>{currencyFormatter.format(paid)} pagado</span>
         <span className="tabular-nums">{Math.round(pct)}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-[#cdeecd]">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-border">
         <div
-          className="h-full rounded-full bg-[#0ca30c] transition-[width] duration-700 ease-out"
+          className="h-full rounded-full bg-positive transition-[width] duration-700 ease-out"
           style={{ width: mounted ? `${pct}%` : "0%" }}
         />
       </div>
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-ink-muted">
         Saldo pendiente: {currencyFormatter.format(remainingAmount)}
       </p>
     </div>
