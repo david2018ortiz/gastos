@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 export type Period = "day" | "week" | "month" | "year";
 
@@ -71,10 +73,11 @@ export function PeriodNav({
   period: Period;
   extraParams: Record<string, string | undefined>;
 }) {
+  const router = useRouter();
   const prev = step(anchor, period, -1);
   const next = step(anchor, period, 1);
 
-  const buildHref = (date: Date, p: Period) => {
+  function buildHref(date: Date, p: Period) {
     const params = new URLSearchParams();
     params.set("period", p);
     params.set("date", toISODate(date));
@@ -82,45 +85,52 @@ export function PeriodNav({
       if (value) params.set(key, value);
     }
     return `/dashboard?${params.toString()}`;
-  };
+  }
 
   return (
-    <div className="space-y-2">
-      <div className="flex gap-0.5 rounded-md bg-surface-raised p-0.5">
-        {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
-          <Link
-            key={p}
-            href={buildHref(anchor, p)}
-            className={
-              "flex-1 rounded py-1 text-center text-[11px] font-medium transition-colors " +
-              (p === period ? "bg-brand text-brand-ink" : "text-ink-secondary hover:bg-surface")
-            }
-            aria-current={p === period ? "true" : undefined}
-          >
-            {PERIOD_LABELS[p]}
-          </Link>
-        ))}
+    <div className="flex items-center justify-between gap-1.5">
+      <button
+        type="button"
+        onClick={() => router.push(buildHref(prev, period))}
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border text-xs"
+        aria-label="Período anterior"
+      >
+        ←
+      </button>
+
+      <span className="min-w-0 flex-1 truncate text-center text-xs font-medium capitalize text-ink-secondary">
+        {formatPeriodLabel(anchor, period)}
+      </span>
+
+      <div className="relative shrink-0">
+        <select
+          aria-label="Tipo de período"
+          value={period}
+          onChange={(e) => router.push(buildHref(anchor, e.target.value as Period))}
+          className="h-7 cursor-pointer appearance-none rounded-md border border-border bg-surface pl-2 pr-5 text-[11px] font-medium text-ink-secondary"
+        >
+          {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
+            <option key={p} value={p}>
+              {PERIOD_LABELS[p]}
+            </option>
+          ))}
+        </select>
+        <span
+          className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-ink-muted"
+          aria-hidden="true"
+        >
+          ▾
+        </span>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Link
-          href={buildHref(prev, period)}
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs"
-          aria-label="Período anterior"
-        >
-          ←
-        </Link>
-        <span className="text-xs font-medium capitalize text-ink-secondary">
-          {formatPeriodLabel(anchor, period)}
-        </span>
-        <Link
-          href={buildHref(next, period)}
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs"
-          aria-label="Período siguiente"
-        >
-          →
-        </Link>
-      </div>
+      <button
+        type="button"
+        onClick={() => router.push(buildHref(next, period))}
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border text-xs"
+        aria-label="Período siguiente"
+      >
+        →
+      </button>
     </div>
   );
 }

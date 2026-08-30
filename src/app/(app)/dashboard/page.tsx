@@ -159,12 +159,7 @@ export default async function DashboardPage({
 
         <div className="space-y-1 py-1 text-center">
           <p className="text-xs text-ink-muted">Saldo actual</p>
-          <p
-            className={
-              "text-2xl font-semibold tabular-nums " +
-              (balance >= 0 ? "text-positive" : "text-negative")
-            }
-          >
+          <p className="text-2xl font-semibold tabular-nums text-ink">
             {currencyFormatter.format(balance)}
           </p>
         </div>
