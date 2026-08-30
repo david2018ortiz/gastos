@@ -108,9 +108,17 @@ error.
 
 ## Fase 7 — Planes de ahorro
 
-- [ ] CRUD de metas de ahorro
-- [ ] Registrar aportes a una meta
-- [ ] Vista de progreso (barra/gráfico) por meta
+- [x] CRUD de metas de ahorro — `/savings`, `/savings/new`, `/savings/[id]/edit`
+- [x] Registrar aportes a una meta — `/savings/[id]`; el monto actual se
+      suma automáticamente vía trigger de base de datos
+      (`apply_savings_contribution`, clampa a `target_amount`, nunca lo supera)
+- [x] Vista de progreso por meta — barra animada (mismo patrón que deudas,
+      color azul para distinguir visualmente de la barra verde de deudas)
+
+Probado extremo a extremo: creación de meta, dos aportes consecutivos
+(incluido uno que sobrepasa la meta) contra la API real de Supabase,
+confirmando que el trigger deja `current_amount` exactamente en
+`target_amount` sin error.
 
 ## Fase 8 — Alertas
 

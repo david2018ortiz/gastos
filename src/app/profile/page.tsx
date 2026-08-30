@@ -48,6 +48,9 @@ export default async function ProfilePage() {
         <Link href="/debts" className="block text-sm underline">
           Ver deudas
         </Link>
+        <Link href="/savings" className="block text-sm underline">
+          Ver ahorro
+        </Link>
 
         <section className="space-y-4">
           <h2 className="text-lg font-medium">Datos personales</h2>
