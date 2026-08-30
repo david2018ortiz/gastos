@@ -34,17 +34,40 @@ export function IncomeExpenseSection({
   const [tab, setTab] = useState<"expense" | "income">("expense");
   const [collapsed, setCollapsed] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  // Posición del sentinel en el documento, medida UNA sola vez al montar
+  // (antes de que el colapso pueda cambiar la altura de nada). Usar esto
+  // en vez de un IntersectionObserver evita el bucle de retroalimentación:
+  // si se vuelve a medir después de colapsar, el punto de referencia se
+  // mueve, dispara el estado contrario, y así sin parar (el parpadeo).
+  const anchorTopRef = useRef(0);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
+    anchorTopRef.current = sentinel.getBoundingClientRect().top + window.scrollY;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setCollapsed(!entry.isIntersecting),
-      { rootMargin: `-${HEADER_OFFSET}px 0px 0px 0px`, threshold: 0 },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
+    // Zona muerta entre el punto de colapsar y el de expandir de nuevo,
+    // para que un scroll de 1px justo en el límite no oscile sin parar.
+    const COLLAPSE_AT = 24;
+    const EXPAND_AT = 4;
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const distance = window.scrollY - anchorTopRef.current;
+        setCollapsed((prev) => {
+          if (!prev && distance > COLLAPSE_AT) return true;
+          if (prev && distance < EXPAND_AT) return false;
+          return prev;
+        });
+        ticking = false;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
