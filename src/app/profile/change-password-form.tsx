@@ -1,13 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { changePassword, profileActionInitialState } from "./actions";
+import { changePassword } from "./actions";
+import type { ProfileActionState } from "./actions";
+
+const initialState: ProfileActionState = { error: null, success: false };
 
 export function ChangePasswordForm() {
-  const [state, formAction, pending] = useActionState(
-    changePassword,
-    profileActionInitialState,
-  );
+  const [state, formAction, pending] = useActionState(changePassword, initialState);
 
   return (
     <form action={formAction} className="space-y-4">

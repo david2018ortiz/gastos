@@ -5,8 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 
 export type ProfileActionState = { error: string | null; success: boolean };
 
-const emptyState: ProfileActionState = { error: null, success: false };
-
 export async function updateProfile(
   _prevState: ProfileActionState,
   formData: FormData,
@@ -69,5 +67,3 @@ export async function changePassword(
 
   return { error: null, success: true };
 }
-
-export { emptyState as profileActionInitialState };

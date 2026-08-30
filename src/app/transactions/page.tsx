@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { deleteTransaction } from "./actions";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -14,7 +15,13 @@ const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   year: "numeric",
 });
 
-export default async function TransactionsPage() {
+export default async function TransactionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; tag?: string }>;
+}) {
+  const { category: categoryFilter, tag: tagFilter } = await searchParams;
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -24,11 +31,34 @@ export default async function TransactionsPage() {
     redirect("/login");
   }
 
-  const { data: transactions } = await supabase
+  const [{ data: categories }, { data: tags }] = await Promise.all([
+    supabase.from("categories").select("id, name").order("name"),
+    supabase.from("tags").select("id, name").order("name"),
+  ]);
+
+  let transactionIdsForTag: string[] | null = null;
+  if (tagFilter) {
+    const { data: tagLinks } = await supabase
+      .from("transaction_tags")
+      .select("transaction_id")
+      .eq("tag_id", tagFilter);
+    transactionIdsForTag = (tagLinks ?? []).map((l) => l.transaction_id);
+  }
+
+  let query = supabase
     .from("transactions")
-    .select("id, type, amount, occurred_at, note, categories(name)")
+    .select("id, type, amount, occurred_at, note, category_id, categories(name)")
     .order("occurred_at", { ascending: false })
     .order("created_at", { ascending: false });
+
+  if (categoryFilter) {
+    query = query.eq("category_id", categoryFilter);
+  }
+  if (transactionIdsForTag) {
+    query = query.in("id", transactionIdsForTag.length ? transactionIdsForTag : ["-"]);
+  }
+
+  const { data: transactions } = await query;
 
   return (
     <main className="flex-1 p-6">
@@ -43,32 +73,91 @@ export default async function TransactionsPage() {
           </Link>
         </div>
 
+        <div className="flex gap-4 text-sm">
+          <Link href="/categories" className="underline">
+            Categorías
+          </Link>
+          <Link href="/tags" className="underline">
+            Etiquetas
+          </Link>
+        </div>
+
+        <form className="flex gap-2" method="get">
+          <select
+            name="category"
+            defaultValue={categoryFilter ?? ""}
+            className="flex-1 rounded-md border px-2 py-1.5 text-sm"
+          >
+            <option value="">Todas las categorías</option>
+            {(categories ?? []).map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <select
+            name="tag"
+            defaultValue={tagFilter ?? ""}
+            className="flex-1 rounded-md border px-2 py-1.5 text-sm"
+          >
+            <option value="">Todas las etiquetas</option>
+            {(tags ?? []).map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="rounded-md border px-3 py-1.5 text-sm"
+          >
+            Filtrar
+          </button>
+        </form>
+
         {!transactions || transactions.length === 0 ? (
           <p className="text-sm text-neutral-500">
-            Todavía no has registrado ninguna transacción.
+            No hay transacciones para mostrar.
           </p>
         ) : (
           <ul className="divide-y">
             {transactions.map((t) => (
-              <li key={t.id} className="py-3 flex items-center justify-between">
-                <div>
+              <li key={t.id} className="py-3 flex items-center justify-between gap-3">
+                <div className="min-w-0">
                   <p className="text-sm font-medium">
                     {t.categories?.name ?? "Sin categoría"}
                   </p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-neutral-500 truncate">
                     {dateFormatter.format(new Date(t.occurred_at + "T00:00:00"))}
                     {t.note ? ` · ${t.note}` : ""}
                   </p>
                 </div>
-                <span
-                  className={
-                    "text-sm font-semibold " +
-                    (t.type === "income" ? "text-green-600" : "text-red-600")
-                  }
-                >
-                  {t.type === "income" ? "+" : "-"}
-                  {currencyFormatter.format(t.amount)}
-                </span>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span
+                    className={
+                      "text-sm font-semibold " +
+                      (t.type === "income" ? "text-green-600" : "text-red-600")
+                    }
+                  >
+                    {t.type === "income" ? "+" : "-"}
+                    {currencyFormatter.format(t.amount)}
+                  </span>
+                  <Link
+                    href={`/transactions/${t.id}/edit`}
+                    className="text-xs underline"
+                  >
+                    Editar
+                  </Link>
+                  <form action={deleteTransaction}>
+                    <input type="hidden" name="id" value={t.id} />
+                    <button
+                      type="submit"
+                      className="text-xs text-red-600 underline"
+                    >
+                      Eliminar
+                    </button>
+                  </form>
+                </div>
               </li>
             ))}
           </ul>

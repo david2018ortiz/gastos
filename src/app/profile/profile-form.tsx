@@ -1,17 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  updateProfile,
-  profileActionInitialState,
-} from "./actions";
+import { updateProfile } from "./actions";
+import type { ProfileActionState } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
 
+const initialState: ProfileActionState = { error: null, success: false };
+
 export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
-  const [state, formAction, pending] = useActionState(
-    updateProfile,
-    profileActionInitialState,
-  );
+  const [state, formAction, pending] = useActionState(updateProfile, initialState);
 
   return (
     <form action={formAction} className="space-y-4">

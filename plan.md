@@ -61,10 +61,18 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 ## Fase 4 — Categorías y etiquetas
 
-- [ ] CRUD de categorías (crear, editar, eliminar, elegir color/ícono)
-- [ ] CRUD de etiquetas
-- [ ] Asignar categoría y etiquetas al crear/editar una transacción
-- [ ] Filtrar listado de transacciones por categoría/etiqueta
+- [x] CRUD de categorías (crear, editar, eliminar, elegir color/ícono) —
+      `/categories`, `/categories/new`, `/categories/[id]/edit`
+- [x] CRUD de etiquetas — `/tags` (crear/eliminar inline)
+- [x] Asignar categoría y etiquetas al crear/editar una transacción —
+      `/transactions/[id]/edit` reutiliza el formulario de creación
+- [x] Filtrar listado de transacciones por categoría/etiqueta — selects en
+      `/transactions`
+
+Probado extremo a extremo contra la API real: crear/editar categoría con
+color e ícono, crear etiqueta y vincularla, filtrar por categoría, y
+confirmar que borrar una categoría no rompe sus transacciones (quedan con
+`category_id = null` por el `ON DELETE SET NULL` ya definido en la Fase 2).
 
 ## Fase 5 — Vistas de ingresos y gastos
 

@@ -1,35 +1,56 @@
 "use client";
 
 import { useActionState } from "react";
-import {
-  createTransaction,
-  transactionActionInitialState,
-} from "../actions";
+import { createTransaction, updateTransaction } from "./actions";
+import type { TransactionActionState } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
+
+type TransactionWithTags = Tables<"transactions"> & {
+  tagNames?: string[];
+};
+
+const initialState: TransactionActionState = { error: null };
 
 export function TransactionForm({
   categories,
+  transaction,
+  submitLabel = "Guardar transacción",
 }: {
   categories: Tables<"categories">[];
+  transaction?: TransactionWithTags;
+  submitLabel?: string;
 }) {
-  const [state, formAction, pending] = useActionState(
-    createTransaction,
-    transactionActionInitialState,
-  );
+  const action = transaction ? updateTransaction : createTransaction;
+  const [state, formAction, pending] = useActionState<
+    TransactionActionState,
+    FormData
+  >(action, initialState);
 
   const today = new Date().toISOString().slice(0, 10);
 
   return (
     <form action={formAction} className="space-y-4">
+      {transaction && <input type="hidden" name="id" value={transaction.id} />}
+
       <div className="space-y-1">
         <span className="text-sm font-medium">Tipo</span>
         <div className="flex gap-4">
           <label className="flex items-center gap-2">
-            <input type="radio" name="type" value="expense" defaultChecked />
+            <input
+              type="radio"
+              name="type"
+              value="expense"
+              defaultChecked={!transaction || transaction.type === "expense"}
+            />
             Gasto
           </label>
           <label className="flex items-center gap-2">
-            <input type="radio" name="type" value="income" />
+            <input
+              type="radio"
+              name="type"
+              value="income"
+              defaultChecked={transaction?.type === "income"}
+            />
             Ingreso
           </label>
         </div>
@@ -46,6 +67,7 @@ export function TransactionForm({
           step="0.01"
           min="0.01"
           required
+          defaultValue={transaction?.amount ?? ""}
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
@@ -58,7 +80,7 @@ export function TransactionForm({
           id="occurredAt"
           name="occurredAt"
           type="date"
-          defaultValue={today}
+          defaultValue={transaction?.occurred_at ?? today}
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
@@ -70,6 +92,7 @@ export function TransactionForm({
         <select
           id="categoryId"
           name="categoryId"
+          defaultValue={transaction?.category_id ?? ""}
           className="w-full rounded-md border px-3 py-2"
         >
           <option value="">Sin categoría</option>
@@ -90,6 +113,7 @@ export function TransactionForm({
           name="tags"
           type="text"
           placeholder="ej. comida, trabajo"
+          defaultValue={transaction?.tagNames?.join(", ") ?? ""}
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
@@ -102,6 +126,7 @@ export function TransactionForm({
           id="note"
           name="note"
           rows={3}
+          defaultValue={transaction?.note ?? ""}
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
@@ -117,7 +142,7 @@ export function TransactionForm({
         disabled={pending}
         className="w-full rounded-md bg-black text-white py-2 font-medium disabled:opacity-50"
       >
-        {pending ? "Guardando…" : "Guardar transacción"}
+        {pending ? "Guardando…" : submitLabel}
       </button>
     </form>
   );
