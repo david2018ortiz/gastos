@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { deleteTransaction } from "@/app/(app)/transactions/actions";
 import { SwipeableRow } from "./swipeable-row";
+import { colorForId } from "@/lib/chart-colors";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -57,20 +58,22 @@ export function TransactionList({
   let rowIndex = 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {groups.map(([date, items]) => (
-        <div key={date} className="space-y-2">
-          <p className="px-1 text-xs font-medium capitalize text-ink-muted">
+        <div key={date}>
+          <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-ink-muted">
             {dayFormatter.format(new Date(date + "T00:00:00"))}
           </p>
-          <ul className="space-y-2">
+          <ul>
             {items.map((t) => {
               const delay = rowIndex * 40;
               rowIndex += 1;
+              const label = t.categories?.name ?? "Sin categoría";
+              const accent = colorForId(label);
               return (
                 <li
                   key={t.id}
-                  className="overflow-hidden rounded-xl transition-all duration-300 ease-out"
+                  className="border-b border-border/60 transition-all duration-300 ease-out last:border-b-0"
                   style={{
                     opacity: mounted ? 1 : 0,
                     transform: mounted ? "translateY(0)" : "translateY(6px)",
@@ -82,32 +85,31 @@ export function TransactionList({
                     deleteAction={deleteTransaction}
                     deleteId={t.id}
                   >
-                    <div className="flex w-full items-center justify-between gap-3 px-3.5 py-3.5">
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span
-                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-raised text-base"
-                          aria-hidden="true"
-                        >
-                          {t.categories?.icon ?? "🏷️"}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">
-                            {t.categories?.name ?? "Sin categoría"}
+                    <div className="flex w-full items-center gap-3 py-3.5">
+                      <span
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-base"
+                        style={{ backgroundColor: accent + "1f" }}
+                        aria-hidden="true"
+                      >
+                        {t.categories?.icon ?? "🏷️"}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[15px] leading-tight">
+                          {label}
+                        </p>
+                        {t.note && (
+                          <p className="truncate text-xs leading-tight text-ink-muted">
+                            {t.note}
                           </p>
-                          {t.note && (
-                            <p className="truncate text-xs text-ink-muted">
-                              {t.note}
-                            </p>
-                          )}
-                        </div>
+                        )}
                       </div>
                       <span
                         className={
-                          "shrink-0 text-sm font-semibold tabular-nums " +
-                          (t.type === "income" ? "text-positive" : "text-negative")
+                          "shrink-0 text-[15px] font-semibold tabular-nums " +
+                          (t.type === "income" ? "text-positive" : "text-ink")
                         }
                       >
-                        {t.type === "income" ? "+" : "-"}
+                        {t.type === "income" ? "+" : "−"}
                         {currencyFormatter.format(t.amount)}
                       </span>
                     </div>

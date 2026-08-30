@@ -89,7 +89,7 @@ export function SwipeableRow({
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
-        className="relative flex touch-pan-y items-center bg-surface"
+        className="relative flex touch-pan-y items-center bg-page"
         style={{
           transform: `translateX(${translateX}px)`,
           transition: animate ? "transform 200ms ease-out" : "none",
