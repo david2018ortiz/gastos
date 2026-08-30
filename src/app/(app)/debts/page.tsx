@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DebtProgress } from "./debt-progress";
 import { deleteDebt } from "./actions";
 import { buttonClasses } from "@/components/button-styles";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function DebtsPage() {
   const supabase = await createClient();
@@ -24,15 +25,14 @@ export default async function DebtsPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Deudas</h1>
-          <Link
-            href="/debts/new"
-            className={buttonClasses.primaryInline}
-          >
-            Nueva
-          </Link>
-        </div>
+        <PageTitleBar
+          title="Deudas"
+          action={
+            <Link href="/debts/new" className={buttonClasses.primaryInline}>
+              Nueva
+            </Link>
+          }
+        />
 
         {!debts || debts.length === 0 ? (
           <p className="text-sm text-ink-muted">

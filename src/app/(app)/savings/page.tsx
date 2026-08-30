@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SavingsProgress } from "./savings-progress";
 import { deleteSavingsGoal } from "./actions";
 import { buttonClasses } from "@/components/button-styles";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function SavingsPage() {
   const supabase = await createClient();
@@ -24,15 +25,14 @@ export default async function SavingsPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Ahorro</h1>
-          <Link
-            href="/savings/new"
-            className={buttonClasses.primaryInline}
-          >
-            Nueva meta
-          </Link>
-        </div>
+        <PageTitleBar
+          title="Ahorro"
+          action={
+            <Link href="/savings/new" className={buttonClasses.primaryInline}>
+              Nueva meta
+            </Link>
+          }
+        />
 
         {!goals || goals.length === 0 ? (
           <p className="text-sm text-ink-muted">

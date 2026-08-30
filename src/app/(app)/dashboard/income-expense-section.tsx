@@ -10,9 +10,9 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 0,
 });
 
-// Alto aproximado de la barra superior fija del layout (app), para que el
-// bloque sticky de aquí se pegue justo debajo y no quede tapado.
-const HEADER_OFFSET = 60;
+// Ya no hay una barra superior fija en el layout (app), así que el bloque
+// sticky de aquí se pega directo contra el borde superior del viewport.
+const HEADER_OFFSET = 0;
 
 type Option = { id: string; name: string };
 

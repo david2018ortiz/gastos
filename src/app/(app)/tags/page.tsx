@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteTag } from "./actions";
 import { TagForm } from "./tag-form";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function TagsPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function TagsPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <h1 className="text-2xl font-semibold">Etiquetas</h1>
+        <PageTitleBar title="Etiquetas" />
 
         <TagForm />
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { deleteCategory } from "./actions";
 import { buttonClasses } from "@/components/button-styles";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function CategoriesPage() {
   const supabase = await createClient();
@@ -23,15 +24,14 @@ export default async function CategoriesPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Categorías</h1>
-          <Link
-            href="/categories/new"
-            className={buttonClasses.primaryInline}
-          >
-            Nueva
-          </Link>
-        </div>
+        <PageTitleBar
+          title="Categorías"
+          action={
+            <Link href="/categories/new" className={buttonClasses.primaryInline}>
+              Nueva
+            </Link>
+          }
+        />
 
         {!categories || categories.length === 0 ? (
           <p className="text-sm text-ink-muted">

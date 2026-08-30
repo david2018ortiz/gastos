@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { buttonClasses } from "@/components/button-styles";
 import { FilterBar } from "@/components/filter-bar";
 import { TransactionList } from "@/components/transaction-list";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function TransactionsPage({
   searchParams,
@@ -53,12 +54,14 @@ export default async function TransactionsPage({
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Transacciones</h1>
-          <Link href="/transactions/new" className={buttonClasses.primaryInline}>
-            Nueva
-          </Link>
-        </div>
+        <PageTitleBar
+          title="Transacciones"
+          action={
+            <Link href="/transactions/new" className={buttonClasses.primaryInline}>
+              Nueva
+            </Link>
+          }
+        />
 
         <div className="flex items-center justify-end">
           <FilterBar categories={categories ?? []} tags={tags ?? []} />

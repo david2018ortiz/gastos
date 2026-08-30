@@ -28,7 +28,7 @@ export function NavMenu() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 w-9 items-center justify-center rounded-md text-xl hover:bg-surface-raised"
+        className="flex h-8 w-8 items-center justify-center rounded-md text-lg hover:bg-surface-raised"
         aria-label="Abrir menú"
         aria-expanded={open}
       >
@@ -42,7 +42,7 @@ export function NavMenu() {
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <ul className="absolute right-0 top-11 z-40 w-52 overflow-hidden rounded-lg border border-border bg-surface shadow-lg feedback-enter">
+          <ul className="absolute right-0 top-9 z-40 w-52 overflow-hidden rounded-lg border border-border bg-surface shadow-lg feedback-enter">
             {links.map((link) => {
               const active =
                 pathname === link.href || pathname.startsWith(link.href + "/");

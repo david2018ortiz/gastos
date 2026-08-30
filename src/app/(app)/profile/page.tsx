@@ -5,6 +5,7 @@ import { signOut } from "@/app/auth/actions";
 import { ProfileForm } from "./profile-form";
 import { ChangePasswordForm } from "./change-password-form";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 const navLinks = [
   { href: "/dashboard", label: "Resumen" },
@@ -39,20 +40,22 @@ export default async function ProfilePage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Perfil</h1>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="inline-flex min-h-9 items-center text-sm text-ink-secondary underline underline-offset-2"
-              >
-                Salir
-              </button>
-            </form>
-          </div>
-        </div>
+        <PageTitleBar
+          title="Perfil"
+          action={
+            <>
+              <ThemeToggle />
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-9 items-center text-sm text-ink-secondary underline underline-offset-2"
+                >
+                  Salir
+                </button>
+              </form>
+            </>
+          }
+        />
 
         <p className="text-sm text-ink-muted">{user.email}</p>
 

@@ -6,6 +6,7 @@ import { IncomeExpenseSection } from "./income-expense-section";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { TransactionList } from "@/components/transaction-list";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -152,7 +153,7 @@ export default async function DashboardPage({
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-8">
-        <h1 className="text-lg font-semibold">Resumen</h1>
+        <PageTitleBar title="Resumen" />
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 

@@ -5,6 +5,7 @@ import { evaluateAlerts } from "@/lib/evaluate-alerts";
 import { deleteAlert, dismissAlert } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
 import { buttonClasses } from "@/components/button-styles";
+import { PageTitleBar } from "@/components/page-title-bar";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -47,15 +48,14 @@ export default async function AlertsPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Alertas</h1>
-          <Link
-            href="/alerts/new"
-            className={buttonClasses.primaryInline}
-          >
-            Nueva
-          </Link>
-        </div>
+        <PageTitleBar
+          title="Alertas"
+          action={
+            <Link href="/alerts/new" className={buttonClasses.primaryInline}>
+              Nueva
+            </Link>
+          }
+        />
 
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-ink-secondary">
