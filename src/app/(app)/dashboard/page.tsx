@@ -4,8 +4,8 @@ import { PeriodNav, type Period } from "./period-nav";
 import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
-import { DailyTransactionList } from "./daily-transaction-list";
-import { FilterBar } from "./filter-bar";
+import { TransactionList } from "@/components/transaction-list";
+import { FilterBar } from "@/components/filter-bar";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -187,7 +187,7 @@ export default async function DashboardPage({
             </h2>
             <FilterBar categories={categories ?? []} tags={tags ?? []} />
           </div>
-          <DailyTransactionList transactions={rows} />
+          <TransactionList transactions={rows} />
         </section>
 
         <section className="space-y-3">

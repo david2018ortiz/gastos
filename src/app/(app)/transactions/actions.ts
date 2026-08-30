@@ -249,4 +249,6 @@ export async function deleteTransaction(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   await supabase.from("transactions").delete().eq("id", id);
   revalidatePath("/transactions");
+  revalidatePath("/dashboard");
+  redirect("/transactions");
 }

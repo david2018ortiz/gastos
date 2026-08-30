@@ -34,10 +34,12 @@ function groupByDate(transactions: TransactionRow[]) {
   return Array.from(groups.entries());
 }
 
-export function DailyTransactionList({
+export function TransactionList({
   transactions,
+  emptyMessage = "No hay movimientos en este período todavía.",
 }: {
   transactions: TransactionRow[];
+  emptyMessage?: string;
 }) {
   const [mounted, setMounted] = useState(false);
 
@@ -47,11 +49,7 @@ export function DailyTransactionList({
   }, []);
 
   if (transactions.length === 0) {
-    return (
-      <p className="text-sm text-ink-muted">
-        No hay movimientos en este período todavía.
-      </p>
-    );
+    return <p className="text-sm text-ink-muted">{emptyMessage}</p>;
   }
 
   const groups = groupByDate(transactions);

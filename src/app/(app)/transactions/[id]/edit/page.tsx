@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TransactionForm } from "../../transaction-form";
+import { deleteTransaction } from "../../actions";
 
 export default async function EditTransactionPage({
   params,
@@ -51,6 +52,13 @@ export default async function EditTransactionPage({
           transaction={{ ...transaction, tagNames }}
           submitLabel="Guardar cambios"
         />
+
+        <form action={deleteTransaction} className="text-center">
+          <input type="hidden" name="id" value={transaction.id} />
+          <button type="submit" className="min-h-9 text-sm text-negative underline">
+            Eliminar transacción
+          </button>
+        </form>
       </div>
     </main>
   );
