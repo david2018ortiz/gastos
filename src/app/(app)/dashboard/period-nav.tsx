@@ -85,14 +85,14 @@ export function PeriodNav({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex gap-1 rounded-lg bg-surface-raised p-1">
+    <div className="space-y-2">
+      <div className="flex gap-0.5 rounded-md bg-surface-raised p-0.5">
         {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
           <Link
             key={p}
             href={buildHref(anchor, p)}
             className={
-              "flex-1 rounded-md py-1.5 text-center text-xs font-medium transition-colors " +
+              "flex-1 rounded py-1 text-center text-[11px] font-medium transition-colors " +
               (p === period ? "bg-brand text-brand-ink" : "text-ink-secondary hover:bg-surface")
             }
             aria-current={p === period ? "true" : undefined}
@@ -105,17 +105,17 @@ export function PeriodNav({
       <div className="flex items-center justify-between">
         <Link
           href={buildHref(prev, period)}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-border text-sm"
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs"
           aria-label="Período anterior"
         >
           ←
         </Link>
-        <span className="text-sm font-medium capitalize">
+        <span className="text-xs font-medium capitalize text-ink-secondary">
           {formatPeriodLabel(anchor, period)}
         </span>
         <Link
           href={buildHref(next, period)}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-border text-sm"
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-border text-xs"
           aria-label="Período siguiente"
         >
           →

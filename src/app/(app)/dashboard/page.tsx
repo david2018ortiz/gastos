@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PeriodNav, type Period } from "./period-nav";
-import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
+import type { CategoryBarDatum } from "./category-bar-chart";
+import { IncomeExpenseSection } from "./income-expense-section";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { TransactionList } from "@/components/transaction-list";
@@ -114,25 +115,28 @@ export default async function DashboardPage({
     .reduce((sum, t) => sum + t.amount, 0);
   const balance = totalIncome - totalExpense;
 
-  const categoryTotals = new Map<string, CategoryBarDatum>();
-  for (const t of rows) {
-    if (t.type !== "expense") continue;
-    const key = t.categories?.id ?? "sin-categoria";
-    const existing = categoryTotals.get(key);
-    if (existing) {
-      existing.total += t.amount;
-    } else {
-      categoryTotals.set(key, {
-        id: key,
-        name: t.categories?.name ?? "Sin categoría",
-        icon: t.categories?.icon ?? null,
-        total: t.amount,
-      });
+  function buildCategoryData(type: "expense" | "income"): CategoryBarDatum[] {
+    const totals = new Map<string, CategoryBarDatum>();
+    for (const t of rows) {
+      if (t.type !== type) continue;
+      const key = t.categories?.id ?? "sin-categoria";
+      const existing = totals.get(key);
+      if (existing) {
+        existing.total += t.amount;
+      } else {
+        totals.set(key, {
+          id: key,
+          name: t.categories?.name ?? "Sin categoría",
+          icon: t.categories?.icon ?? null,
+          total: t.amount,
+        });
+      }
     }
+    return Array.from(totals.values()).sort((a, b) => b.total - a.total);
   }
-  const categoryData = Array.from(categoryTotals.values()).sort(
-    (a, b) => b.total - a.total,
-  );
+
+  const expenseCategoryData = buildCategoryData("expense");
+  const incomeCategoryData = buildCategoryData("income");
 
   const tagMap = new Map<string, TagChipDatum>();
   for (const t of rows) {
@@ -149,7 +153,7 @@ export default async function DashboardPage({
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-8">
-        <h1 className="text-2xl font-semibold">Resumen</h1>
+        <h1 className="text-lg font-semibold">Resumen</h1>
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 
@@ -165,20 +169,12 @@ export default async function DashboardPage({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-ink-muted">Ingresos</p>
-            <p className="text-sm font-semibold text-positive tabular-nums">
-              {currencyFormatter.format(totalIncome)}
-            </p>
-          </div>
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-ink-muted">Gastos</p>
-            <p className="text-sm font-semibold text-negative tabular-nums">
-              {currencyFormatter.format(totalExpense)}
-            </p>
-          </div>
-        </div>
+        <IncomeExpenseSection
+          totalIncome={totalIncome}
+          totalExpense={totalExpense}
+          incomeData={incomeCategoryData}
+          expenseData={expenseCategoryData}
+        />
 
         <section className="space-y-3">
           <div className="flex items-center justify-between">
@@ -188,13 +184,6 @@ export default async function DashboardPage({
             <FilterBar categories={categories ?? []} tags={tags ?? []} />
           </div>
           <TransactionList transactions={rows} />
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-sm font-medium text-ink-secondary">
-            Gasto por categoría
-          </h2>
-          <CategoryBarChart data={categoryData} />
         </section>
 
         {tagData.length > 0 && (
