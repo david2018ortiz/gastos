@@ -153,13 +153,11 @@ export default async function DashboardPage({
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 
-        <FilterBar categories={categories ?? []} tags={tags ?? []} />
-
-        <div className="space-y-1 py-2 text-center">
-          <p className="text-sm text-ink-muted">Saldo actual</p>
+        <div className="space-y-1 py-1 text-center">
+          <p className="text-xs text-ink-muted">Saldo actual</p>
           <p
             className={
-              "text-4xl font-semibold tabular-nums " +
+              "text-2xl font-semibold tabular-nums " +
               (balance >= 0 ? "text-positive" : "text-negative")
             }
           >
@@ -183,9 +181,12 @@ export default async function DashboardPage({
         </div>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-ink-secondary">
-            Movimientos del período
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-medium text-ink-secondary">
+              Movimientos del período
+            </h2>
+            <FilterBar categories={categories ?? []} tags={tags ?? []} />
+          </div>
           <DailyTransactionList transactions={rows} />
         </section>
 

@@ -20,10 +20,17 @@ function IconSelect({
   const selected = options.find((o) => o.id === value);
 
   return (
-    <div className="relative inline-flex min-h-9 items-center gap-1 rounded-full border border-border bg-surface px-2.5 pr-6 text-xs text-ink-secondary">
+    <div
+      className={
+        "relative inline-flex h-8 items-center gap-1 rounded-full border text-xs " +
+        (selected
+          ? "border-brand bg-brand-soft pl-2 pr-5 text-ink"
+          : "border-border pl-1.5 pr-4 text-ink-muted")
+      }
+    >
       <span aria-hidden="true">{icon}</span>
-      <span className="max-w-20 truncate">{selected ? selected.name : label}</span>
-      <span className="pointer-events-none absolute right-2 text-[10px] text-ink-muted" aria-hidden="true">
+      {selected && <span className="max-w-16 truncate">{selected.name}</span>}
+      <span className="pointer-events-none absolute right-1.5 text-[9px]" aria-hidden="true">
         ▾
       </span>
       <select
