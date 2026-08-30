@@ -5,6 +5,7 @@ import { CategoryBarChart, type CategoryBarDatum } from "./category-bar-chart";
 import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { DailyTransactionList } from "./daily-transaction-list";
+import { FilterBar } from "./filter-bar";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -152,39 +153,21 @@ export default async function DashboardPage({
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 
-        <form className="flex gap-2" method="get">
-          <input type="hidden" name="period" value={period} />
-          <input type="hidden" name="date" value={toISODate(anchor)} />
-          <select
-            name="category"
-            defaultValue={params.category ?? ""}
-            className="flex-1 rounded-md border px-2 py-1.5 text-sm"
-          >
-            <option value="">Todas las categorías</option>
-            {(categories ?? []).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <select
-            name="tag"
-            defaultValue={params.tag ?? ""}
-            className="flex-1 rounded-md border px-2 py-1.5 text-sm"
-          >
-            <option value="">Todas las etiquetas</option>
-            {(tags ?? []).map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="rounded-md border px-3 py-1.5 text-sm">
-            Filtrar
-          </button>
-        </form>
+        <FilterBar categories={categories ?? []} tags={tags ?? []} />
 
-        <div className="grid grid-cols-3 gap-2 text-center">
+        <div className="space-y-1 py-2 text-center">
+          <p className="text-sm text-ink-muted">Saldo actual</p>
+          <p
+            className={
+              "text-4xl font-semibold tabular-nums " +
+              (balance >= 0 ? "text-positive" : "text-negative")
+            }
+          >
+            {currencyFormatter.format(balance)}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-center">
           <div className="rounded-lg border p-3">
             <p className="text-xs text-ink-muted">Ingresos</p>
             <p className="text-sm font-semibold text-positive tabular-nums">
@@ -195,17 +178,6 @@ export default async function DashboardPage({
             <p className="text-xs text-ink-muted">Gastos</p>
             <p className="text-sm font-semibold text-negative tabular-nums">
               {currencyFormatter.format(totalExpense)}
-            </p>
-          </div>
-          <div className="rounded-lg border p-3">
-            <p className="text-xs text-ink-muted">Balance</p>
-            <p
-              className={
-                "text-sm font-semibold tabular-nums " +
-                (balance >= 0 ? "text-positive" : "text-negative")
-              }
-            >
-              {currencyFormatter.format(balance)}
             </p>
           </div>
         </div>
