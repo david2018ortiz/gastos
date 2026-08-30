@@ -244,11 +244,19 @@ export async function updateTransaction(
   redirect("/transactions");
 }
 
+// Usada desde la lista (deslizar para eliminar): se queda en la misma
+// página, solo revalida los datos.
 export async function deleteTransaction(formData: FormData) {
   const supabase = await createClient();
   const id = String(formData.get("id") ?? "");
   await supabase.from("transactions").delete().eq("id", id);
   revalidatePath("/transactions");
   revalidatePath("/dashboard");
+}
+
+// Usada desde la pantalla de edición: ahí sí tiene sentido volver al
+// listado después de borrar, porque no queda nada que editar.
+export async function deleteTransactionAndRedirect(formData: FormData) {
+  await deleteTransaction(formData);
   redirect("/transactions");
 }
