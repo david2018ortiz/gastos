@@ -94,9 +94,17 @@ la API real de Supabase, misma forma de datos que usa `/dashboard`.
 
 ## Fase 6 — Deudas
 
-- [ ] CRUD de deudas
-- [ ] Registrar abonos y actualizar saldo pendiente
-- [ ] Vista de progreso de pago por deuda
+- [x] CRUD de deudas — `/debts`, `/debts/new`, `/debts/[id]/edit`
+- [x] Registrar abonos y actualizar saldo pendiente — `/debts/[id]`; el saldo
+      se descuenta automáticamente vía trigger de base de datos
+      (`apply_debt_payment`, clampa a 0, nunca queda negativo)
+- [x] Vista de progreso de pago por deuda — barra animada (mismo patrón que
+      el gráfico de la Fase 5), monto pagado/pendiente y porcentaje
+
+Probado extremo a extremo: creación de deuda, dos abonos consecutivos
+(incluido uno que sobrepasa el saldo restante) contra la API real de
+Supabase, confirmando que el trigger deja `remaining_amount` en 0 sin
+error.
 
 ## Fase 7 — Planes de ahorro
 
