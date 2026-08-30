@@ -30,14 +30,19 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 
 ## Fase 2 — Modelo de datos base
 
-- [ ] Tabla `categories` (nombre, color/ícono, tipo ingreso/gasto, usuario)
-- [ ] Tabla `tags` (nombre, usuario)
-- [ ] Tabla `transactions` (tipo, monto, fecha, categoría, etiquetas, nota, usuario)
-- [ ] Tabla `debts` (nombre, monto total, saldo pendiente, fecha límite, usuario)
-- [ ] Tabla `savings_goals` (nombre, meta, monto actual, plazo, usuario)
-- [ ] Tabla `alerts` (tipo, condición, estado, usuario)
-- [ ] Tabla `ai_usage_logs` (usuario, tokens in/out, costo estimado, fecha, endpoint)
-- [ ] RLS en todas las tablas anteriores
+- [x] Tabla `categories` (nombre, color/ícono, tipo ingreso/gasto, usuario)
+- [x] Tabla `tags` (nombre, usuario)
+- [x] Tabla `transactions` (tipo, monto, fecha, categoría, nota, usuario) +
+      tabla `transaction_tags` para la relación muchos-a-muchos con etiquetas
+- [x] Tabla `debts` (nombre, monto total, saldo pendiente, fecha límite,
+      usuario) + tabla `debt_payments` para abonos (Fase 6)
+- [x] Tabla `savings_goals` (nombre, meta, monto actual, plazo, usuario) +
+      tabla `savings_contributions` para aportes (Fase 7)
+- [x] Tabla `alerts` (tipo, condición, estado, usuario)
+- [x] Tabla `ai_usage_logs` (usuario, tokens in/out, costo estimado, fecha, endpoint)
+- [x] RLS en todas las tablas anteriores — 0 advertencias de seguridad y
+      rendimiento en el linter de Supabase (políticas optimizadas con
+      `(select auth.uid())`, todas las FK indexadas)
 
 ## Fase 3 — Registro de transacciones
 

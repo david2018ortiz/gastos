@@ -14,6 +14,167 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_logs: {
+        Row: {
+          created_at: string
+          endpoint: string
+          estimated_cost: number
+          id: string
+          tokens_in: number
+          tokens_out: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          estimated_cost?: number
+          id?: string
+          tokens_in?: number
+          tokens_out?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          estimated_cost?: number
+          id?: string
+          tokens_in?: number
+          tokens_out?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      alerts: {
+        Row: {
+          condition: Json
+          created_at: string
+          id: string
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          condition?: Json
+          created_at?: string
+          id?: string
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          condition?: Json
+          created_at?: string
+          id?: string
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      debt_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          debt_id: string
+          id: string
+          paid_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          debt_id: string
+          id?: string
+          paid_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          debt_id?: string
+          id?: string
+          paid_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debt_payments_debt_id_fkey"
+            columns: ["debt_id"]
+            isOneToOne: false
+            referencedRelation: "debts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      debts: {
+        Row: {
+          created_at: string
+          due_date: string | null
+          id: string
+          name: string
+          remaining_amount: number
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          name: string
+          remaining_amount: number
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          name?: string
+          remaining_amount?: number
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -40,6 +201,172 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      savings_contributions: {
+        Row: {
+          amount: number
+          contributed_at: string
+          created_at: string
+          id: string
+          savings_goal_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          contributed_at?: string
+          created_at?: string
+          id?: string
+          savings_goal_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          contributed_at?: string
+          created_at?: string
+          id?: string
+          savings_goal_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_contributions_savings_goal_id_fkey"
+            columns: ["savings_goal_id"]
+            isOneToOne: false
+            referencedRelation: "savings_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      savings_goals: {
+        Row: {
+          created_at: string
+          current_amount: number
+          id: string
+          name: string
+          target_amount: number
+          target_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_amount?: number
+          id?: string
+          name: string
+          target_amount: number
+          target_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_amount?: number
+          id?: string
+          name?: string
+          target_amount?: number
+          target_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transaction_tags: {
+        Row: {
+          tag_id: string
+          transaction_id: string
+          user_id: string
+        }
+        Insert: {
+          tag_id: string
+          transaction_id: string
+          user_id: string
+        }
+        Update: {
+          tag_id?: string
+          transaction_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_tags_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category_id: string | null
+          created_at: string
+          id: string
+          note: string | null
+          occurred_at: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          occurred_at?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          occurred_at?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
