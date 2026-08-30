@@ -102,6 +102,39 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 - [ ] Revisión de accesibilidad (contraste, tamaños táctiles)
 - [ ] Prueba completa en iPhone real como PWA instalada
 
+## Fase 11 — Colaboración / cuentas compartidas (familiar)
+
+Permitir que un usuario invite a otra persona (por email) a compartir en un
+solo espacio unificado sus ingresos, gastos, deudas y planes de ahorro (ej.
+pareja o familia), en vez de llevarlos por separado.
+
+- [ ] Tabla `households` (espacio compartido: nombre, usuario creador, fecha)
+- [ ] Tabla `household_members` (usuario, household, rol —owner/member—, fecha
+      de ingreso) con RLS: solo miembros del household ven la fila
+- [ ] Tabla `household_invitations` (household, email invitado, usuario que
+      invita, estado —pending/accepted/rejected/expired—, token, fechas)
+- [ ] Flujo de invitación: el usuario dueño busca/escribe el email de la
+      persona a invitar y la invitación queda pendiente
+- [ ] Notificación/listado de invitaciones pendientes en el perfil del
+      invitado (si ya tiene cuenta en Walley) para aceptar o rechazar
+- [ ] Caso: invitar a un email que **no** tiene cuenta todavía — enviar
+      invitación que se vincula automáticamente al household cuando esa
+      persona se registre con ese email
+- [ ] Al aceptar, las cuentas quedan relacionadas: pasar a ver el
+      household compartido sin perder el histórico personal previo
+- [ ] Revisar y migrar el modelo de datos de la Fase 2 (`transactions`,
+      `categories`, `debts`, `savings_goals`, `alerts`) para que cada fila
+      pueda pertenecer a un `household_id` además de al `user_id` que la
+      creó, y actualizar las políticas RLS para chequear membresía en
+      `household_members` en vez de solo `auth.uid() = user_id`
+- [ ] Selector en la UI para alternar entre vista "personal" y vista
+      "compartida" (household)
+- [ ] Gestión de miembros: ver quién pertenece al household, salir de un
+      household, remover a un miembro (solo el owner)
+- [ ] Definir qué pasa con transacciones/deudas/metas ya creadas por un
+      usuario si sale de un household compartido (¿se quedan como
+      personales o se pierden de la vista compartida?)
+
 ## Notas abiertas / pendientes de decidir
 
 - Confirmar el identificador exacto de modelo para llamadas a la API de
@@ -112,3 +145,6 @@ Checklist de avance del MVP. Ver reglas y decisiones fijas en `CLAUDE.md`.
 - Validar si Safari/iOS permite leer el portapapeles automáticamente al
   abrir la PWA o si requiere un gesto explícito del usuario (botón "Pegar
   imagen"); ajustar UX según la limitación real encontrada.
+- Decidir en qué momento del desarrollo conviene implementar la Fase 11
+  (colaboración): cuanto más tarde se haga, más migración de RLS/datos
+  hace falta sobre lo ya construido en la Fase 2.
