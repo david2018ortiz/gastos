@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PageTransition } from "@/components/page-transition";
+import { RealtimeRefresher } from "@/components/realtime-refresher";
 
 export default async function AppLayout({
   children,
@@ -18,6 +19,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex flex-1 flex-col">
+      <RealtimeRefresher userId={user.id} />
       <PageTransition>{children}</PageTransition>
     </div>
   );
