@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserHouseholds } from "@/lib/get-user-households";
 import { CategoryForm } from "../../category-form";
 import { updateCategory } from "../../actions";
 
@@ -19,11 +20,10 @@ export default async function EditCategoryPage({
     redirect("/login");
   }
 
-  const { data: category } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const [{ data: category }, households] = await Promise.all([
+    supabase.from("categories").select("*").eq("id", id).single(),
+    getUserHouseholds(supabase, user.id),
+  ]);
 
   if (!category) {
     notFound();
@@ -42,6 +42,7 @@ export default async function EditCategoryPage({
         <CategoryForm
           action={updateCategory}
           category={category}
+          households={households}
           submitLabel="Guardar cambios"
         />
       </div>

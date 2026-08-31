@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserHouseholds } from "@/lib/get-user-households";
 import { deleteTag } from "./actions";
 import { TagForm } from "./tag-form";
 import { PageTitleBar } from "@/components/page-title-bar";
@@ -15,17 +16,17 @@ export default async function TagsPage() {
     redirect("/login");
   }
 
-  const { data: tags } = await supabase
-    .from("tags")
-    .select("*")
-    .order("name");
+  const [{ data: tags }, households] = await Promise.all([
+    supabase.from("tags").select("*").order("name"),
+    getUserHouseholds(supabase, user.id),
+  ]);
 
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
         <PageTitleBar title="Etiquetas" />
 
-        <TagForm />
+        <TagForm households={households} />
 
         {!tags || tags.length === 0 ? (
           <p className="text-sm text-ink-muted">
@@ -39,6 +40,11 @@ export default async function TagsPage() {
                 className="flex items-center gap-2 rounded-full border px-3 py-1 text-sm"
               >
                 {tag.name}
+                {tag.household_id && (
+                  <span className="text-xs" title="Etiqueta compartida con tu familia">
+                    🏠
+                  </span>
+                )}
                 <form action={deleteTag}>
                   <input type="hidden" name="id" value={tag.id} />
                   <button

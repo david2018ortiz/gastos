@@ -29,6 +29,7 @@ async function linkTags(
   userId: string,
   transactionId: string,
   tagsRaw: string,
+  householdId: string | null,
 ): Promise<string | null> {
   const tagNames = parseTagNames(tagsRaw);
   if (tagNames.length === 0) return null;
@@ -45,7 +46,13 @@ async function linkTags(
   if (newTagNames.length > 0) {
     const { data: insertedTags, error: tagsError } = await supabase
       .from("tags")
-      .insert(newTagNames.map((name) => ({ user_id: userId, name })))
+      .insert(
+        newTagNames.map((name) => ({
+          user_id: userId,
+          name,
+          household_id: householdId,
+        })),
+      )
       .select("id, name");
 
     if (tagsError) {
@@ -116,7 +123,7 @@ export async function createTransaction(
     return { error: "No se pudo guardar la transacción." };
   }
 
-  const tagError = await linkTags(supabase, user.id, transaction.id, tagsRaw);
+  const tagError = await linkTags(supabase, user.id, transaction.id, tagsRaw, householdId);
   if (tagError) {
     return { error: tagError };
   }
@@ -191,7 +198,7 @@ export async function quickAddTransaction(
     };
   }
 
-  const tagError = await linkTags(supabase, user.id, transaction.id, tagsRaw);
+  const tagError = await linkTags(supabase, user.id, transaction.id, tagsRaw, householdId);
   if (tagError) {
     return { error: tagError, success: false, savedAt: 0 };
   }
@@ -257,7 +264,7 @@ export async function updateTransaction(
     return { error: "La transacción se guardó, pero no se pudieron actualizar las etiquetas." };
   }
 
-  const tagError = await linkTags(supabase, user.id, id, tagsRaw);
+  const tagError = await linkTags(supabase, user.id, id, tagsRaw, householdId);
   if (tagError) {
     return { error: tagError };
   }

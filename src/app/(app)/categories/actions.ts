@@ -23,6 +23,7 @@ export async function createCategory(
   const type = String(formData.get("type") ?? "");
   const color = String(formData.get("color") ?? "").trim() || null;
   const icon = String(formData.get("icon") ?? "").trim() || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -33,7 +34,7 @@ export async function createCategory(
 
   const { error } = await supabase
     .from("categories")
-    .insert({ user_id: user.id, name, type, color, icon });
+    .insert({ user_id: user.id, name, type, color, icon, household_id: householdId });
 
   if (error) {
     return {
@@ -65,6 +66,7 @@ export async function updateCategory(
   const type = String(formData.get("type") ?? "");
   const color = String(formData.get("color") ?? "").trim() || null;
   const icon = String(formData.get("icon") ?? "").trim() || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -75,7 +77,7 @@ export async function updateCategory(
 
   const { error } = await supabase
     .from("categories")
-    .update({ name, type, color, icon })
+    .update({ name, type, color, icon, household_id: householdId })
     .eq("id", id);
 
   if (error) {

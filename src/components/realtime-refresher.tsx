@@ -12,7 +12,17 @@ const WATCHED_TABLES = [
   "debt_payments",
   "household_invitations",
   "household_members",
+  "categories",
+  "tags",
+  "transaction_tags",
 ] as const;
+
+const WATCHED_EVENTS = ["INSERT", "UPDATE", "DELETE"] as const;
+
+// Sondeo de respaldo: si por lo que sea el WebSocket de Realtime no entrega
+// un evento (falla de red, reconexión, etc.), esto garantiza que la
+// pantalla igual quede al día en un máximo de ~20s.
+const POLL_INTERVAL_MS = 20_000;
 
 export function RealtimeRefresher({ userId }: { userId: string }) {
   const router = useRouter();
@@ -28,16 +38,25 @@ export function RealtimeRefresher({ userId }: { userId: string }) {
 
     let channel = supabase.channel(`app-changes-${userId}`);
     for (const table of WATCHED_TABLES) {
-      channel = channel.on(
-        "postgres_changes",
-        { event: "*", schema: "public", table },
-        scheduleRefresh,
-      );
+      for (const event of WATCHED_EVENTS) {
+        channel = channel.on(
+          "postgres_changes",
+          { event, schema: "public", table },
+          scheduleRefresh,
+        );
+      }
     }
     channel.subscribe();
 
+    const pollId = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        router.refresh();
+      }
+    }, POLL_INTERVAL_MS);
+
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      clearInterval(pollId);
       supabase.removeChannel(channel);
     };
   }, [userId, router]);

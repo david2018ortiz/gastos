@@ -6,6 +6,8 @@ import { useActionState } from "react";
 import type { CategoryActionState } from "./actions";
 import type { Tables } from "@/lib/supabase/database.types";
 import { IconPicker } from "./icon-picker";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 const initialState: CategoryActionState = { error: null };
 
@@ -25,6 +27,7 @@ const COLORS = [
 export function CategoryForm({
   action,
   category,
+  households,
   submitLabel,
 }: {
   action: (
@@ -32,6 +35,7 @@ export function CategoryForm({
     formData: FormData,
   ) => Promise<CategoryActionState>;
   category?: Tables<"categories">;
+  households: HouseholdOption[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -103,6 +107,8 @@ export function CategoryForm({
         <span className="text-sm font-medium">Ícono</span>
         <IconPicker defaultValue={category?.icon} />
       </div>
+
+      <HouseholdSelect households={households} defaultValue={category?.household_id} />
 
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

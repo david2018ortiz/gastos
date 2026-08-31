@@ -19,11 +19,14 @@ export async function createTag(
   }
 
   const name = String(formData.get("name") ?? "").trim();
+  const householdId = String(formData.get("householdId") ?? "") || null;
   if (!name) {
     return { error: "El nombre es obligatorio." };
   }
 
-  const { error } = await supabase.from("tags").insert({ user_id: user.id, name });
+  const { error } = await supabase
+    .from("tags")
+    .insert({ user_id: user.id, name, household_id: householdId });
 
   if (error) {
     return {

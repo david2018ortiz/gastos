@@ -5,10 +5,12 @@ import { buttonClasses } from "@/components/button-styles";
 import { useActionState, useRef, useEffect } from "react";
 import { createTag } from "./actions";
 import type { TagActionState } from "./actions";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 const initialState: TagActionState = { error: null };
 
-export function TagForm() {
+export function TagForm({ households }: { households: HouseholdOption[] }) {
   const [state, formAction, pending] = useActionState(createTag, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -19,23 +21,26 @@ export function TagForm() {
   }, [pending, state.error]);
 
   return (
-    <form ref={formRef} action={formAction} className="flex gap-2">
-      <input
-        name="name"
-        type="text"
-        required
-        placeholder="Nueva etiqueta"
-        className="flex-1 rounded-md border px-3 py-2"
-      />
-      <button
-        type="submit"
-        disabled={pending}
-        className={buttonClasses.primaryInline}
-      >
-        {pending ? "…" : "Agregar"}
-      </button>
+    <form ref={formRef} action={formAction} className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          name="name"
+          type="text"
+          required
+          placeholder="Nueva etiqueta"
+          className="flex-1 rounded-md border px-3 py-2"
+        />
+        <button
+          type="submit"
+          disabled={pending}
+          className={buttonClasses.primaryInline}
+        >
+          {pending ? "…" : "Agregar"}
+        </button>
+      </div>
+      <HouseholdSelect households={households} />
       {state.error && (
-        <p className="text-sm text-negative basis-full feedback-enter" role="alert">
+        <p className="text-sm text-negative feedback-enter" role="alert">
           {state.error}
         </p>
       )}

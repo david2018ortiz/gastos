@@ -431,23 +431,34 @@ export type Database = {
       tags: {
         Row: {
           created_at: string
+          household_id: string | null
           id: string
           name: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          household_id?: string | null
           id?: string
           name: string
           user_id: string
         }
         Update: {
           created_at?: string
+          household_id?: string | null
           id?: string
           name?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tags_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transaction_tags: {
         Row: {

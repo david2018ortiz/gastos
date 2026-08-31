@@ -52,7 +52,14 @@ export default async function CategoriesPage() {
                     {category.icon ?? ""}
                   </span>
                   <div>
-                    <p className="text-sm font-medium">{category.name}</p>
+                    <p className="text-sm font-medium">
+                      {category.name}
+                      {category.household_id && (
+                        <span className="ml-1 text-xs" title="Categoría compartida con tu familia">
+                          🏠
+                        </span>
+                      )}
+                    </p>
                     <p className="text-xs text-ink-muted">
                       {category.type === "income" ? "Ingreso" : "Gasto"}
                     </p>
