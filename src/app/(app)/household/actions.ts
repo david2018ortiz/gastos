@@ -78,6 +78,38 @@ export async function leaveHousehold(formData: FormData) {
   revalidatePath("/household");
 }
 
+export async function renameHousehold(
+  _prevState: HouseholdActionState,
+  formData: FormData,
+): Promise<HouseholdActionState> {
+  const supabase = await createClient();
+  const householdId = String(formData.get("householdId") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+
+  if (!name) {
+    return { error: "Ponle un nombre al espacio." };
+  }
+
+  const { error } = await supabase
+    .from("households")
+    .update({ name })
+    .eq("id", householdId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/household");
+  return { error: null };
+}
+
+export async function deleteHousehold(formData: FormData) {
+  const supabase = await createClient();
+  const householdId = String(formData.get("householdId") ?? "");
+  await supabase.from("households").delete().eq("id", householdId);
+  revalidatePath("/household");
+}
+
 export async function removeMember(formData: FormData) {
   const supabase = await createClient();
   const householdId = String(formData.get("householdId") ?? "");

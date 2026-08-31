@@ -16,7 +16,7 @@ const links = [
   { href: "/profile", label: "Perfil" },
 ];
 
-export function NavMenu() {
+export function NavMenu({ pendingInvitations = 0 }: { pendingInvitations?: number }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -29,11 +29,16 @@ export function NavMenu() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-8 w-8 items-center justify-center rounded-md text-lg hover:bg-surface-raised"
+        className="relative flex h-8 w-8 items-center justify-center rounded-md text-lg hover:bg-surface-raised"
         aria-label="Abrir menú"
         aria-expanded={open}
       >
         ☰
+        {pendingInvitations > 0 && (
+          <span className="absolute right-0 top-0 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-negative px-1 text-[9px] font-semibold text-white">
+            {pendingInvitations}
+          </span>
+        )}
       </button>
 
       {open && (
@@ -52,13 +57,18 @@ export function NavMenu() {
                   <Link
                     href={link.href}
                     className={
-                      "block min-h-11 px-4 py-2.5 text-sm transition-colors " +
+                      "flex min-h-11 items-center justify-between px-4 py-2.5 text-sm transition-colors " +
                       (active
                         ? "bg-brand-soft font-medium text-ink"
                         : "text-ink-secondary hover:bg-surface-raised")
                     }
                   >
                     {link.label}
+                    {link.href === "/household" && pendingInvitations > 0 && (
+                      <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-negative px-1 text-[9px] font-semibold text-white">
+                        {pendingInvitations}
+                      </span>
+                    )}
                   </Link>
                 </li>
               );

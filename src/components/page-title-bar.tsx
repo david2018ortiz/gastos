@@ -18,6 +18,17 @@ export async function PageTitleBar({
 
   const triggeredAlerts = user ? await evaluateAlerts(supabase, user.id) : [];
 
+  let pendingInvitations = 0;
+  if (user) {
+    const { data: incomingInvitations } = await supabase
+      .from("household_invitations")
+      .select("id, invited_by")
+      .eq("status", "pending");
+    pendingInvitations = (incomingInvitations ?? []).filter(
+      (inv) => inv.invited_by !== user.id,
+    ).length;
+  }
+
   return (
     <div className="flex items-center justify-between gap-2">
       <h1 className="min-w-0 truncate text-lg font-semibold">{title}</h1>
@@ -39,7 +50,7 @@ export async function PageTitleBar({
             </span>
           )}
         </Link>
-        <NavMenu />
+        <NavMenu pendingInvitations={pendingInvitations} />
       </div>
     </div>
   );

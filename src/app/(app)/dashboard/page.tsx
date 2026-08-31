@@ -109,6 +109,28 @@ export default async function DashboardPage({
   const { data: transactions } = await query;
   const rows = transactions ?? [];
 
+  const householdIds = households.map((h) => h.id);
+  let recentHouseholdActivity: { count: number; names: string[] } | null = null;
+  if (householdIds.length > 0) {
+    const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+    const { data: recentTx } = await supabase
+      .from("transactions")
+      .select("user_id")
+      .in("household_id", householdIds)
+      .neq("user_id", user.id)
+      .gte("created_at", since);
+
+    if (recentTx && recentTx.length > 0) {
+      const userIds = Array.from(new Set(recentTx.map((t) => t.user_id)));
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", userIds);
+      const names = (profiles ?? []).map((p) => p.full_name || "Tu familiar");
+      recentHouseholdActivity = { count: recentTx.length, names };
+    }
+  }
+
   const totalIncome = rows
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -156,6 +178,16 @@ export default async function DashboardPage({
     <main className="flex-1 p-5">
       <div className="mx-auto max-w-sm space-y-4">
         <PageTitleBar title="Resumen" />
+
+        {recentHouseholdActivity && (
+          <p className="rounded-lg border border-brand bg-brand-soft px-3 py-2 text-xs text-ink">
+            🏠 {recentHouseholdActivity.names.join(" y ")} agregó{" "}
+            {recentHouseholdActivity.count === 1
+              ? "un movimiento compartido"
+              : `${recentHouseholdActivity.count} movimientos compartidos`}{" "}
+            en los últimos 2 días.
+          </p>
+        )}
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
 

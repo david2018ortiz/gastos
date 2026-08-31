@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageTitleBar } from "@/components/page-title-bar";
 import { CreateHouseholdForm } from "./create-household-form";
 import { InviteForm } from "./invite-form";
+import { HouseholdSettings } from "./household-settings";
 import { acceptInvitation, declineInvitation, leaveHousehold, removeMember } from "./actions";
 
 export default async function HouseholdPage() {
@@ -159,6 +160,10 @@ export default async function HouseholdPage() {
                   </form>
                 )}
               </div>
+
+              {isOwner && (
+                <HouseholdSettings householdId={household.id} name={household.name} />
+              )}
 
               <div className="space-y-1.5">
                 <p className="text-xs text-ink-muted">Miembros</p>
