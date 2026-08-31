@@ -113,11 +113,41 @@ export async function addDebtPayment(
     return { error: "El monto del abono debe ser mayor a cero." };
   }
 
+  const { data: debt } = await supabase
+    .from("debts")
+    .select("name, household_id")
+    .eq("id", debtId)
+    .single();
+
+  if (!debt) {
+    return { error: "No se encontró la deuda." };
+  }
+
+  // El abono sale de tu saldo disponible, así que también queda como
+  // gasto en transacciones.
+  const { data: transaction, error: transactionError } = await supabase
+    .from("transactions")
+    .insert({
+      user_id: user.id,
+      type: "expense",
+      amount,
+      occurred_at: paidAt,
+      note: `Abono a deuda: ${debt.name}`,
+      household_id: debt.household_id,
+    })
+    .select("id")
+    .single();
+
+  if (transactionError || !transaction) {
+    return { error: "No se pudo registrar el abono." };
+  }
+
   const { error } = await supabase.from("debt_payments").insert({
     user_id: user.id,
     debt_id: debtId,
     amount,
     paid_at: paidAt,
+    transaction_id: transaction.id,
   });
 
   if (error) {
@@ -126,5 +156,6 @@ export async function addDebtPayment(
 
   revalidatePath("/debts");
   revalidatePath(`/debts/${debtId}`);
+  revalidatePath("/dashboard");
   redirect(`/debts/${debtId}`);
 }

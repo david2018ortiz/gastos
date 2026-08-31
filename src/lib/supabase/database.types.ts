@@ -136,6 +136,7 @@ export type Database = {
           debt_id: string
           id: string
           paid_at: string
+          transaction_id: string | null
           user_id: string
         }
         Insert: {
@@ -144,6 +145,7 @@ export type Database = {
           debt_id: string
           id?: string
           paid_at?: string
+          transaction_id?: string | null
           user_id: string
         }
         Update: {
@@ -152,6 +154,7 @@ export type Database = {
           debt_id?: string
           id?: string
           paid_at?: string
+          transaction_id?: string | null
           user_id?: string
         }
         Relationships: [
@@ -160,6 +163,13 @@ export type Database = {
             columns: ["debt_id"]
             isOneToOne: false
             referencedRelation: "debts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "debt_payments_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -336,6 +346,7 @@ export type Database = {
           created_at: string
           id: string
           savings_goal_id: string
+          transaction_id: string | null
           user_id: string
         }
         Insert: {
@@ -344,6 +355,7 @@ export type Database = {
           created_at?: string
           id?: string
           savings_goal_id: string
+          transaction_id?: string | null
           user_id: string
         }
         Update: {
@@ -352,6 +364,7 @@ export type Database = {
           created_at?: string
           id?: string
           savings_goal_id?: string
+          transaction_id?: string | null
           user_id?: string
         }
         Relationships: [
@@ -360,6 +373,13 @@ export type Database = {
             columns: ["savings_goal_id"]
             isOneToOne: false
             referencedRelation: "savings_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "savings_contributions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -534,6 +554,12 @@ export type Database = {
           name: string
           updated_at: string
         }
+        SetofOptions: {
+          from: "*"
+          to: "households"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       decline_household_invitation: {
         Args: { p_invitation_id: string }
@@ -549,6 +575,12 @@ export type Database = {
           invited_email: string
           responded_at: string | null
           status: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "household_invitations"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
       is_household_member: {

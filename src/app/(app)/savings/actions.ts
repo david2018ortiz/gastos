@@ -112,11 +112,41 @@ export async function addSavingsContribution(
     return { error: "El aporte debe ser mayor a cero." };
   }
 
+  const { data: goal } = await supabase
+    .from("savings_goals")
+    .select("name, household_id")
+    .eq("id", savingsGoalId)
+    .single();
+
+  if (!goal) {
+    return { error: "No se encontró la meta de ahorro." };
+  }
+
+  // El aporte sale de tu saldo disponible, así que también queda como
+  // gasto en transacciones (dinero que pasa de "libre" a "guardado").
+  const { data: transaction, error: transactionError } = await supabase
+    .from("transactions")
+    .insert({
+      user_id: user.id,
+      type: "expense",
+      amount,
+      occurred_at: contributedAt,
+      note: `Aporte a meta de ahorro: ${goal.name}`,
+      household_id: goal.household_id,
+    })
+    .select("id")
+    .single();
+
+  if (transactionError || !transaction) {
+    return { error: "No se pudo registrar el aporte." };
+  }
+
   const { error } = await supabase.from("savings_contributions").insert({
     user_id: user.id,
     savings_goal_id: savingsGoalId,
     amount,
     contributed_at: contributedAt,
+    transaction_id: transaction.id,
   });
 
   if (error) {
@@ -125,5 +155,6 @@ export async function addSavingsContribution(
 
   revalidatePath("/savings");
   revalidatePath(`/savings/${savingsGoalId}`);
+  revalidatePath("/dashboard");
   redirect(`/savings/${savingsGoalId}`);
 }
