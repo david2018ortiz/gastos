@@ -12,6 +12,7 @@ const links = [
   { href: "/debts", label: "Deudas" },
   { href: "/savings", label: "Ahorro" },
   { href: "/alerts", label: "Alertas" },
+  { href: "/household", label: "Familia" },
   { href: "/profile", label: "Perfil" },
 ];
 

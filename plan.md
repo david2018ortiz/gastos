@@ -242,10 +242,9 @@ del invitado / notificación al abrir la app), nunca por email.
       `invite_to_household(household_id, email)` — solo el creador invita, y
       solo si el email ya tiene cuenta en Walley (si no existe, lanza error
       explícito en vez de encolar nada)
-- [x] Base de datos lista para notificación/listado de invitaciones
-      pendientes: `household_invitations` filtra por RLS según el email del
-      usuario autenticado; falta construir la UI (perfil/badge) en una fase
-      de interfaz posterior
+- [x] UI de invitaciones pendientes — `/household`: sección "Invitaciones
+      para ti" con aceptar/rechazar; el usuario no la encontraba porque
+      solo existía la base de datos, sin ninguna pantalla
 - [x] Decisión: NO se soporta invitar a un email sin cuenta (se descartó el
       auto-vínculo al registrarse, para evitar cualquier flujo parecido a
       invitación por correo)
@@ -257,10 +256,17 @@ del invitado / notificación al abrir la app), nunca por email.
       opcional (null = personal); políticas RLS actualizadas para permitir
       ver/editar tanto al dueño (`user_id`) como a cualquier miembro del
       household (`is_household_member(household_id)`)
+- [x] UI de `/household`: crear el espacio (una sola vez), invitar por
+      correo, ver miembros con su nombre (requirió una política RLS nueva
+      en `profiles` para que los miembros de un mismo household puedan
+      verse entre sí — antes cada quien solo veía su propio perfil), salir,
+      y que el owner pueda quitar a alguien
 - [ ] Selector en la UI para alternar entre vista "personal" y vista
-      "compartida" (household) — pendiente de construir la interfaz
+      "compartida" (household) al crear/editar una transacción, deuda o
+      meta — sigue pendiente; por ahora todo lo que se crea queda personal
+      (`household_id = null`) aunque ya tengas un espacio compartido
 - [x] Gestión de miembros en base de datos: `leave_household` (salir) y
-      `remove_household_member` (solo el owner remueve a otros); falta la UI
+      `remove_household_member` (solo el owner remueve a otros), con UI
 - [x] Decisión: el creador (owner) no puede salir mientras haya otros
       miembros (debe remover a todos primero o transferir el household);
       las transacciones/deudas/metas que un usuario creó quedan con su

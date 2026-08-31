@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/debts", label: "Deudas" },
   { href: "/savings", label: "Ahorro" },
   { href: "/alerts", label: "Alertas" },
+  { href: "/household", label: "Familia" },
 ];
 
 export default async function ProfilePage() {
