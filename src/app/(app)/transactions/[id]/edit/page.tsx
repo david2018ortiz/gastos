@@ -19,15 +19,20 @@ export default async function EditTransactionPage({
     redirect("/login");
   }
 
-  const [{ data: transaction }, { data: categories }, { data: tagLinks }] =
-    await Promise.all([
-      supabase.from("transactions").select("*").eq("id", id).single(),
-      supabase.from("categories").select("*").order("name"),
-      supabase
-        .from("transaction_tags")
-        .select("tags(name)")
-        .eq("transaction_id", id),
-    ]);
+  const [
+    { data: transaction },
+    { data: categories },
+    { data: tagLinks },
+    { data: tags },
+  ] = await Promise.all([
+    supabase.from("transactions").select("*").eq("id", id).single(),
+    supabase.from("categories").select("*").order("name"),
+    supabase
+      .from("transaction_tags")
+      .select("tags(name)")
+      .eq("transaction_id", id),
+    supabase.from("tags").select("id, name").order("name"),
+  ]);
 
   if (!transaction) {
     notFound();
@@ -41,7 +46,7 @@ export default async function EditTransactionPage({
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Editar transacción</h1>
+          <h1 className="text-lg font-semibold">Editar transacción</h1>
           <Link href="/transactions" className="text-sm underline">
             Volver
           </Link>
@@ -49,6 +54,7 @@ export default async function EditTransactionPage({
 
         <TransactionForm
           categories={categories ?? []}
+          tags={tags ?? []}
           transaction={{ ...transaction, tagNames }}
           submitLabel="Guardar cambios"
         />

@@ -13,22 +13,22 @@ export default async function NewTransactionPage() {
     redirect("/login");
   }
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .order("name");
+  const [{ data: categories }, { data: tags }] = await Promise.all([
+    supabase.from("categories").select("*").order("name"),
+    supabase.from("tags").select("id, name").order("name"),
+  ]);
 
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Nueva transacción</h1>
+          <h1 className="text-lg font-semibold">Nueva transacción</h1>
           <Link href="/transactions" className="text-sm underline">
             Volver
           </Link>
         </div>
 
-        <TransactionForm categories={categories ?? []} />
+        <TransactionForm categories={categories ?? []} tags={tags ?? []} />
       </div>
     </main>
   );

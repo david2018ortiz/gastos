@@ -12,6 +12,14 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
 
 type Option = { id: string; name: string };
 
+// Scroll a partir del cual se colapsa, y por debajo del cual se vuelve a
+// expandir. La brecha entre ambos evita oscilaciones en el borde.
+const COLLAPSE_AT = 72;
+const EXPAND_AT = 40;
+// Cuánto se encoge la sección al colapsar (barras + título ocultos).
+// Se usa para no colapsar cuando eso dejaría la página sin scroll.
+const COLLAPSE_SHRINK = 130;
+
 export function IncomeExpenseSection({
   totalIncome,
   totalExpense,
@@ -38,15 +46,28 @@ export function IncomeExpenseSection({
   useEffect(() => {
     function onScroll() {
       const y = window.scrollY;
+      // Con una lista corta, colapsar acorta tanto la página que el
+      // scroll se pierde, la sección se expande y vuelve a haber scroll:
+      // un bucle visible como parpadeo (se notaba sobre todo en la PWA
+      // instalada). Solo colapsamos si, incluso después de encoger, sigue
+      // quedando página suficiente para sostener el scroll.
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const hasRoomToCollapse = maxScroll > COLLAPSE_AT + COLLAPSE_SHRINK;
+
       setCollapsed((prev) => {
-        if (!prev && y > 72) return true;
-        if (prev && y < 40) return false;
+        if (!prev && y > COLLAPSE_AT && hasRoomToCollapse) return true;
+        if (prev && y < EXPAND_AT) return false;
         return prev;
       });
     }
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (

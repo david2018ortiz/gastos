@@ -5,10 +5,15 @@ import { quickAddTransaction } from "@/app/(app)/transactions/actions";
 import type { QuickAddState } from "@/app/(app)/transactions/actions";
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
+import { TagPicker, type TagOption } from "@/components/tag-picker";
 
 type Category = { id: string; name: string; icon: string | null; type: string };
 
-const initialState: QuickAddState = { error: null, success: false };
+const initialState: QuickAddState = {
+  error: null,
+  success: false,
+  savedAt: 0,
+};
 
 function parseSpeech(transcript: string, categories: Category[]) {
   const digits = transcript.match(/\d[\d.,]*/);
@@ -30,7 +35,13 @@ function parseSpeech(transcript: string, categories: Category[]) {
   };
 }
 
-export function QuickAddTransaction({ categories }: { categories: Category[] }) {
+export function QuickAddTransaction({
+  categories,
+  tags = [],
+}: {
+  categories: Category[];
+  tags?: TagOption[];
+}) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
     quickAddTransaction,
@@ -52,15 +63,17 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
     );
   }, []);
 
+  // Depende de `savedAt` (no de `success`) para que cada guardado cierre
+  // el popup, incluso si el anterior también fue exitoso.
   useEffect(() => {
-    if (state.success) {
+    if (state.savedAt > 0) {
       setOpen(false);
       setAmount("");
       setCategoryId("");
       setNote("");
       setType("expense");
     }
-  }, [state.success]);
+  }, [state.savedAt]);
 
   function startListening() {
     const SpeechRecognitionCtor =
@@ -129,7 +142,7 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
           onClick={() => !listening && setOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-t-2xl bg-surface p-5 pb-8 feedback-enter"
+            className="max-h-[85dvh] w-full max-w-sm overflow-y-auto rounded-t-2xl bg-surface p-5 pb-8 feedback-enter"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
@@ -147,7 +160,6 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
             <form action={formAction} className="space-y-4">
               <input type="hidden" name="type" value={type} />
               <input type="hidden" name="categoryId" value={categoryId} />
-              <input type="hidden" name="note" value={note} />
 
               <div className="flex gap-2">
                 <button
@@ -194,32 +206,45 @@ export function QuickAddTransaction({ categories }: { categories: Category[] }) 
                 className="w-full rounded-md border py-3 pl-7 pr-3 text-lg tabular-nums"
               />
 
-              {note && (
-                <p className="text-xs text-ink-muted feedback-enter">“{note}”</p>
-              )}
+              <input
+                type="text"
+                name="note"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Descripción (ej. Hamburguesa)"
+                className="w-full rounded-md border px-3 py-2 text-sm"
+              />
 
               {filteredCategories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {filteredCategories.map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() =>
-                        setCategoryId(categoryId === c.id ? "" : c.id)
-                      }
-                      className={
-                        "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors " +
-                        (categoryId === c.id
-                          ? "border-brand bg-brand-soft"
-                          : "border-border")
-                      }
-                    >
-                      <span aria-hidden="true">{c.icon ?? "🏷️"}</span>
-                      {c.name}
-                    </button>
-                  ))}
+                <div className="space-y-1.5">
+                  <p className="text-xs text-ink-muted">Categoría</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {filteredCategories.map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() =>
+                          setCategoryId(categoryId === c.id ? "" : c.id)
+                        }
+                        className={
+                          "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors " +
+                          (categoryId === c.id
+                            ? "border-brand bg-brand-soft"
+                            : "border-border text-ink-secondary")
+                        }
+                      >
+                        <span aria-hidden="true">{c.icon ?? "🏷️"}</span>
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              <div className="space-y-1.5">
+                <p className="text-xs text-ink-muted">Etiquetas</p>
+                <TagPicker availableTags={tags} compact />
+              </div>
 
               {state.error && (
                 <p className="text-sm text-negative feedback-enter" role="alert">

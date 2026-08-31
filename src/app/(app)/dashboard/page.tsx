@@ -185,7 +185,7 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <QuickAddTransaction categories={categories ?? []} />
+      <QuickAddTransaction categories={categories ?? []} tags={tags ?? []} />
     </main>
   );
 }

@@ -60,22 +60,25 @@ export function SwipeableRow({
   }
 
   return (
-    <div className="relative overflow-hidden bg-negative">
+    <div className="relative overflow-hidden">
       <div
-        className="absolute inset-y-0 left-0 flex items-center justify-center bg-brand text-xs font-medium text-brand-ink"
+        className="absolute inset-y-1 left-0 flex items-center justify-center rounded-xl bg-brand text-xs font-medium text-brand-ink"
         style={{ width: ACTION_WIDTH }}
       >
-        Editar
+        <span className="flex flex-col items-center gap-1">
+          <span aria-hidden="true">✏️</span>
+          Editar
+        </span>
       </div>
       <form
         action={deleteAction}
-        className="absolute inset-y-0 right-0"
+        className="absolute inset-y-1 right-0"
         style={{ width: ACTION_WIDTH }}
       >
         <input type="hidden" name="id" value={deleteId} />
         <button
           type="submit"
-          className="flex h-full w-full flex-col items-center justify-center gap-0.5 text-xs font-medium text-white"
+          className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl bg-negative text-xs font-medium text-white"
         >
           <span aria-hidden="true">🗑️</span>
           Eliminar

@@ -2,6 +2,7 @@
 
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
+import { TagPicker, type TagOption } from "@/components/tag-picker";
 
 import { useActionState } from "react";
 import { createTransaction, updateTransaction } from "./actions";
@@ -16,10 +17,12 @@ const initialState: TransactionActionState = { error: null };
 
 export function TransactionForm({
   categories,
+  tags = [],
   transaction,
   submitLabel = "Guardar transacción",
 }: {
   categories: Tables<"categories">[];
+  tags?: TagOption[];
   transaction?: TransactionWithTags;
   submitLabel?: string;
 }) {
@@ -99,27 +102,22 @@ export function TransactionForm({
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="tags" className="text-sm font-medium">
-          Etiquetas (separadas por coma)
-        </label>
-        <input
-          id="tags"
-          name="tags"
-          type="text"
-          placeholder="ej. comida, trabajo"
-          defaultValue={transaction?.tagNames?.join(", ") ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+        <span className="text-sm font-medium">Etiquetas</span>
+        <TagPicker
+          availableTags={tags}
+          defaultSelected={transaction?.tagNames ?? []}
         />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="note" className="text-sm font-medium">
-          Nota
+          Descripción
         </label>
-        <textarea
+        <input
           id="note"
           name="note"
-          rows={3}
+          type="text"
+          placeholder="ej. Hamburguesa, mercado del mes…"
           defaultValue={transaction?.note ?? ""}
           className="w-full rounded-md border px-3 py-2"
         />
