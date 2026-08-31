@@ -22,6 +22,7 @@ export async function createSavingsGoal(
   const name = String(formData.get("name") ?? "").trim();
   const targetAmount = Number(formData.get("targetAmount") ?? "");
   const targetDate = String(formData.get("targetDate") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -35,6 +36,7 @@ export async function createSavingsGoal(
     name,
     target_amount: targetAmount,
     target_date: targetDate,
+    household_id: householdId,
   });
 
   if (error) {
@@ -61,6 +63,7 @@ export async function updateSavingsGoal(
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const targetDate = String(formData.get("targetDate") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -68,7 +71,7 @@ export async function updateSavingsGoal(
 
   const { error } = await supabase
     .from("savings_goals")
-    .update({ name, target_date: targetDate })
+    .update({ name, target_date: targetDate, household_id: householdId })
     .eq("id", id);
 
   if (error) {

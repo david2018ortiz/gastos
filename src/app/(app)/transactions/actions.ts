@@ -85,6 +85,7 @@ export async function createTransaction(
   const amountRaw = String(formData.get("amount") ?? "");
   const occurredAt = String(formData.get("occurredAt") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -105,6 +106,7 @@ export async function createTransaction(
       amount,
       occurred_at: occurredAt || undefined,
       category_id: categoryId,
+      household_id: householdId,
       note,
     })
     .select("id")
@@ -153,6 +155,7 @@ export async function quickAddTransaction(
   const type = String(formData.get("type") ?? "expense");
   const amount = Number(formData.get("amount") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -174,6 +177,7 @@ export async function quickAddTransaction(
       type,
       amount,
       category_id: categoryId,
+      household_id: householdId,
       note,
     })
     .select("id")
@@ -215,6 +219,7 @@ export async function updateTransaction(
   const amountRaw = String(formData.get("amount") ?? "");
   const occurredAt = String(formData.get("occurredAt") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -234,6 +239,7 @@ export async function updateTransaction(
       amount,
       occurred_at: occurredAt || undefined,
       category_id: categoryId,
+      household_id: householdId,
       note,
     })
     .eq("id", id);

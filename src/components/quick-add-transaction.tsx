@@ -6,6 +6,8 @@ import type { QuickAddState } from "@/app/(app)/transactions/actions";
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
 import { TagPicker, type TagOption } from "@/components/tag-picker";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 type Category = { id: string; name: string; icon: string | null; type: string };
 
@@ -38,9 +40,11 @@ function parseSpeech(transcript: string, categories: Category[]) {
 export function QuickAddTransaction({
   categories,
   tags = [],
+  households = [],
 }: {
   categories: Category[];
   tags?: TagOption[];
+  households?: HouseholdOption[];
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
@@ -245,6 +249,8 @@ export function QuickAddTransaction({
                 <p className="text-xs text-ink-muted">Etiquetas</p>
                 <TagPicker availableTags={tags} compact />
               </div>
+
+              <HouseholdSelect households={households} />
 
               {state.error && (
                 <p className="text-sm text-negative feedback-enter" role="alert">

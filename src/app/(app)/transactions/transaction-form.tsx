@@ -3,6 +3,8 @@
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
 import { TagPicker, type TagOption } from "@/components/tag-picker";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 import { useActionState } from "react";
 import { createTransaction, updateTransaction } from "./actions";
@@ -18,11 +20,13 @@ const initialState: TransactionActionState = { error: null };
 export function TransactionForm({
   categories,
   tags = [],
+  households = [],
   transaction,
   submitLabel = "Guardar transacción",
 }: {
   categories: Tables<"categories">[];
   tags?: TagOption[];
+  households?: HouseholdOption[];
   transaction?: TransactionWithTags;
   submitLabel?: string;
 }) {
@@ -100,6 +104,11 @@ export function TransactionForm({
           ))}
         </select>
       </div>
+
+      <HouseholdSelect
+        households={households}
+        defaultValue={transaction?.household_id}
+      />
 
       <div className="space-y-1">
         <span className="text-sm font-medium">Etiquetas</span>

@@ -23,6 +23,7 @@ export type TransactionRow = {
   amount: number;
   occurred_at: string;
   note: string | null;
+  household_id?: string | null;
   categories: { name: string; icon: string | null } | null;
 };
 
@@ -96,6 +97,15 @@ export function TransactionList({
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[15px] leading-tight">
                           {label}
+                          {t.household_id && (
+                            <span
+                              className="ml-1 align-middle text-xs"
+                              title="Compartida con tu familia"
+                              aria-label="Compartida con tu familia"
+                            >
+                              🏠
+                            </span>
+                          )}
                         </p>
                         {t.note && (
                           <p className="truncate text-xs leading-tight text-ink-muted">

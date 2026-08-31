@@ -2,6 +2,8 @@
 
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 import { useActionState } from "react";
 import type { SavingsGoalActionState } from "./actions";
@@ -12,6 +14,7 @@ const initialState: SavingsGoalActionState = { error: null };
 export function SavingsGoalForm({
   action,
   goal,
+  households = [],
   submitLabel,
 }: {
   action: (
@@ -19,6 +22,7 @@ export function SavingsGoalForm({
     formData: FormData,
   ) => Promise<SavingsGoalActionState>;
   goal?: Tables<"savings_goals">;
+  households?: HouseholdOption[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -63,6 +67,8 @@ export function SavingsGoalForm({
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
+
+      <HouseholdSelect households={households} defaultValue={goal?.household_id} />
 
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

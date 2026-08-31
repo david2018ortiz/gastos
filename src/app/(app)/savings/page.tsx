@@ -45,6 +45,11 @@ export default async function SavingsPage() {
                 <div className="flex items-center justify-between">
                   <Link href={`/savings/${goal.id}`} className="font-medium">
                     {goal.name}
+                    {goal.household_id && (
+                      <span className="ml-1 text-xs" title="Meta compartida con tu familia">
+                        🏠
+                      </span>
+                    )}
                   </Link>
                   <div className="flex items-center gap-3 text-xs">
                     <Link href={`/savings/${goal.id}/edit`} className="underline">

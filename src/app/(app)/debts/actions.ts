@@ -22,6 +22,7 @@ export async function createDebt(
   const name = String(formData.get("name") ?? "").trim();
   const totalAmount = Number(formData.get("totalAmount") ?? "");
   const dueDate = String(formData.get("dueDate") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -36,6 +37,7 @@ export async function createDebt(
     total_amount: totalAmount,
     remaining_amount: totalAmount,
     due_date: dueDate,
+    household_id: householdId,
   });
 
   if (error) {
@@ -62,6 +64,7 @@ export async function updateDebt(
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const dueDate = String(formData.get("dueDate") ?? "") || null;
+  const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -69,7 +72,7 @@ export async function updateDebt(
 
   const { error } = await supabase
     .from("debts")
-    .update({ name, due_date: dueDate })
+    .update({ name, due_date: dueDate, household_id: householdId })
     .eq("id", id);
 
   if (error) {

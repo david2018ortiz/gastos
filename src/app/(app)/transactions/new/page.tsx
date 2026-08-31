@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserHouseholds } from "@/lib/get-user-households";
 import { TransactionForm } from "../transaction-form";
 
 export default async function NewTransactionPage() {
@@ -13,9 +14,10 @@ export default async function NewTransactionPage() {
     redirect("/login");
   }
 
-  const [{ data: categories }, { data: tags }] = await Promise.all([
+  const [{ data: categories }, { data: tags }, households] = await Promise.all([
     supabase.from("categories").select("*").order("name"),
     supabase.from("tags").select("id, name").order("name"),
+    getUserHouseholds(supabase, user.id),
   ]);
 
   return (
@@ -28,7 +30,11 @@ export default async function NewTransactionPage() {
           </Link>
         </div>
 
-        <TransactionForm categories={categories ?? []} tags={tags ?? []} />
+        <TransactionForm
+          categories={categories ?? []}
+          tags={tags ?? []}
+          households={households}
+        />
       </div>
     </main>
   );

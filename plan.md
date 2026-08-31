@@ -261,10 +261,14 @@ del invitado / notificación al abrir la app), nunca por email.
       en `profiles` para que los miembros de un mismo household puedan
       verse entre sí — antes cada quien solo veía su propio perfil), salir,
       y que el owner pueda quitar a alguien
-- [ ] Selector en la UI para alternar entre vista "personal" y vista
-      "compartida" (household) al crear/editar una transacción, deuda o
-      meta — sigue pendiente; por ahora todo lo que se crea queda personal
-      (`household_id = null`) aunque ya tengas un espacio compartido
+- [x] Selector "Pertenece a: Solo yo / 🏠 Familia X" en los formularios de
+      transacción (completo, edición y agregado rápido), deuda y meta de
+      ahorro — `household-select.tsx`. Si el usuario no pertenece a ningún
+      household no se muestra nada (sin ruido en el formulario). Las listas
+      (transacciones, deudas, ahorro) marcan con 🏠 lo compartido.
+      Probado extremo a extremo con dos usuarios reales: A crea una
+      transacción marcada como del household y otra personal; B ve
+      únicamente la compartida.
 - [x] Gestión de miembros en base de datos: `leave_household` (salir) y
       `remove_household_member` (solo el owner remueve a otros), con UI
 - [x] Decisión: el creador (owner) no puede salir mientras haya otros

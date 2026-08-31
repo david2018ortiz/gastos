@@ -2,6 +2,8 @@
 
 import { buttonClasses } from "@/components/button-styles";
 import { CurrencyInput } from "@/components/currency-input";
+import { HouseholdSelect } from "@/components/household-select";
+import type { HouseholdOption } from "@/lib/get-user-households";
 
 import { useActionState } from "react";
 import type { DebtActionState } from "./actions";
@@ -12,6 +14,7 @@ const initialState: DebtActionState = { error: null };
 export function DebtForm({
   action,
   debt,
+  households = [],
   submitLabel,
 }: {
   action: (
@@ -19,6 +22,7 @@ export function DebtForm({
     formData: FormData,
   ) => Promise<DebtActionState>;
   debt?: Tables<"debts">;
+  households?: HouseholdOption[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -63,6 +67,8 @@ export function DebtForm({
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
+
+      <HouseholdSelect households={households} defaultValue={debt?.household_id} />
 
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

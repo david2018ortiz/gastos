@@ -45,6 +45,11 @@ export default async function DebtsPage() {
                 <div className="flex items-center justify-between">
                   <Link href={`/debts/${debt.id}`} className="font-medium">
                     {debt.name}
+                    {debt.household_id && (
+                      <span className="ml-1 text-xs" title="Deuda compartida con tu familia">
+                        🏠
+                      </span>
+                    )}
                   </Link>
                   <div className="flex items-center gap-3 text-xs">
                     <Link href={`/debts/${debt.id}/edit`} className="underline">

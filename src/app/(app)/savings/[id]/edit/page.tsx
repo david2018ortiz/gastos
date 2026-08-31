@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserHouseholds } from "@/lib/get-user-households";
 import { SavingsGoalForm } from "../../savings-goal-form";
 import { updateSavingsGoal } from "../../actions";
 
@@ -19,11 +20,10 @@ export default async function EditSavingsGoalPage({
     redirect("/login");
   }
 
-  const { data: goal } = await supabase
-    .from("savings_goals")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const [{ data: goal }, households] = await Promise.all([
+    supabase.from("savings_goals").select("*").eq("id", id).single(),
+    getUserHouseholds(supabase, user.id),
+  ]);
 
   if (!goal) {
     notFound();
@@ -33,7 +33,7 @@ export default async function EditSavingsGoalPage({
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Editar meta</h1>
+          <h1 className="text-lg font-semibold">Editar meta</h1>
           <Link href="/savings" className="text-sm underline">
             Volver
           </Link>
@@ -42,6 +42,7 @@ export default async function EditSavingsGoalPage({
         <SavingsGoalForm
           action={updateSavingsGoal}
           goal={goal}
+          households={households}
           submitLabel="Guardar cambios"
         />
       </div>
