@@ -19,11 +19,6 @@ const WATCHED_TABLES = [
 
 const WATCHED_EVENTS = ["INSERT", "UPDATE", "DELETE"] as const;
 
-// Sondeo de respaldo: si por lo que sea el WebSocket de Realtime no entrega
-// un evento (falla de red, reconexión, etc.), esto garantiza que la
-// pantalla igual quede al día en un máximo de ~20s.
-const POLL_INTERVAL_MS = 20_000;
-
 export function RealtimeRefresher({ userId }: { userId: string }) {
   const router = useRouter();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -36,28 +31,44 @@ export function RealtimeRefresher({ userId }: { userId: string }) {
       timeoutRef.current = setTimeout(() => router.refresh(), 400);
     }
 
-    let channel = supabase.channel(`app-changes-${userId}`);
-    for (const table of WATCHED_TABLES) {
-      for (const event of WATCHED_EVENTS) {
-        channel = channel.on(
-          "postgres_changes",
-          { event, schema: "public", table },
-          scheduleRefresh,
-        );
+    function subscribe() {
+      let channel = supabase.channel(`app-changes-${userId}-${Date.now()}`);
+      for (const table of WATCHED_TABLES) {
+        for (const event of WATCHED_EVENTS) {
+          channel = channel.on(
+            "postgres_changes",
+            { event, schema: "public", table },
+            scheduleRefresh,
+          );
+        }
       }
+      // Si el socket se cae (red inestable, el celular vuelve de segundo
+      // plano, etc.), Realtime deja de avisar en silencio: hay que
+      // reabrir el canal manualmente y refrescar por si algo se perdió.
+      channel.subscribe((status) => {
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          supabase.removeChannel(channel);
+          setTimeout(() => {
+            channelRef.current = subscribe();
+          }, 1000);
+        }
+      });
+      return channel;
     }
-    channel.subscribe();
 
-    const pollId = setInterval(() => {
+    const channelRef = { current: subscribe() };
+
+    function onVisible() {
       if (document.visibilityState === "visible") {
         router.refresh();
       }
-    }, POLL_INTERVAL_MS);
+    }
+    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      clearInterval(pollId);
-      supabase.removeChannel(channel);
+      document.removeEventListener("visibilitychange", onVisible);
+      supabase.removeChannel(channelRef.current);
     };
   }, [userId, router]);
 
