@@ -53,9 +53,11 @@ function IconSelect({
 export function FilterBar({
   categories,
   tags,
+  accounts = [],
 }: {
   categories: Option[];
   tags: Option[];
+  accounts?: Option[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -87,6 +89,15 @@ export function FilterBar({
         options={tags}
         onChange={(v) => setParam("tag", v)}
       />
+      {accounts.length > 0 && (
+        <IconSelect
+          icon="💳"
+          label="Cuenta"
+          value={searchParams.get("account") ?? ""}
+          options={accounts}
+          onChange={(v) => setParam("account", v)}
+        />
+      )}
     </div>
   );
 }

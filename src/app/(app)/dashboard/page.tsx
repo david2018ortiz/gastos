@@ -7,6 +7,7 @@ import { TagChips, type TagChipDatum } from "./tag-chips";
 import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { TransactionList } from "@/components/transaction-list";
 import { PageTitleBar } from "@/components/page-title-bar";
+import Link from "next/link";
 import { getUserHouseholds } from "@/lib/get-user-households";
 import { getUserAccounts } from "@/lib/get-user-accounts";
 
@@ -94,7 +95,7 @@ export default async function DashboardPage({
   let query = supabase
     .from("transactions")
     .select(
-      "id, type, amount, occurred_at, note, category_id, household_id, categories(id, name, icon), transaction_tags(tags(id, name))",
+      "id, type, amount, occurred_at, note, category_id, household_id, categories(id, name, icon), accounts(name, icon), transaction_tags(tags(id, name))",
     )
     .gte("occurred_at", start)
     .lt("occurred_at", end)
@@ -110,6 +111,24 @@ export default async function DashboardPage({
 
   const { data: transactions } = await query;
   const rows = transactions ?? [];
+
+  // Saldo de cada cuenta: no depende del período seleccionado, es
+  // acumulado (todo lo que ha entrado/salido de esa cuenta desde siempre).
+  const { data: accountTransactions } = await supabase
+    .from("transactions")
+    .select("account_id, type, amount")
+    .not("account_id", "is", null);
+
+  const balanceByAccount = new Map<string, number>();
+  for (const t of accountTransactions ?? []) {
+    if (!t.account_id) continue;
+    const delta = t.type === "income" ? t.amount : -t.amount;
+    balanceByAccount.set(t.account_id, (balanceByAccount.get(t.account_id) ?? 0) + delta);
+  }
+  const totalAccountsBalance = Array.from(balanceByAccount.values()).reduce(
+    (sum, v) => sum + v,
+    0,
+  );
 
   const householdIds = households.map((h) => h.id);
   let recentHouseholdActivity: { count: number; names: string[] } | null = null;
@@ -189,6 +208,35 @@ export default async function DashboardPage({
               : `${recentHouseholdActivity.count} movimientos compartidos`}{" "}
             en los últimos 2 días.
           </p>
+        )}
+
+        {accounts.length > 0 && (
+          <section className="space-y-2 rounded-lg border p-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-medium text-ink-secondary">Cuentas</h2>
+              <Link href="/accounts" className="text-xs underline">
+                Ver todas
+              </Link>
+            </div>
+            <ul className="space-y-1.5">
+              {accounts.map((account) => (
+                <li key={account.id} className="flex items-center justify-between text-sm">
+                  <span>
+                    {account.icon ?? "💳"} {account.name}
+                  </span>
+                  <span className="tabular-nums font-medium">
+                    {currencyFormatter.format(balanceByAccount.get(account.id) ?? 0)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex items-center justify-between border-t border-border pt-1.5 text-sm font-semibold">
+              <span>Total consolidado</span>
+              <span className="tabular-nums">
+                {currencyFormatter.format(totalAccountsBalance)}
+              </span>
+            </div>
+          </section>
         )}
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />

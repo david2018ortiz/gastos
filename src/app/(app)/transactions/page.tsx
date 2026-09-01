@@ -9,9 +9,10 @@ import { PageTitleBar } from "@/components/page-title-bar";
 export default async function TransactionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; tag?: string }>;
+  searchParams: Promise<{ category?: string; tag?: string; account?: string }>;
 }) {
-  const { category: categoryFilter, tag: tagFilter } = await searchParams;
+  const { category: categoryFilter, tag: tagFilter, account: accountFilter } =
+    await searchParams;
 
   const supabase = await createClient();
   const {
@@ -22,9 +23,10 @@ export default async function TransactionsPage({
     redirect("/login");
   }
 
-  const [{ data: categories }, { data: tags }] = await Promise.all([
+  const [{ data: categories }, { data: tags }, { data: accounts }] = await Promise.all([
     supabase.from("categories").select("id, name").order("name"),
     supabase.from("tags").select("id, name").order("name"),
+    supabase.from("accounts").select("id, name").order("name"),
   ]);
 
   let transactionIdsForTag: string[] | null = null;
@@ -39,13 +41,16 @@ export default async function TransactionsPage({
   let query = supabase
     .from("transactions")
     .select(
-      "id, type, amount, occurred_at, note, category_id, household_id, categories(name, icon)",
+      "id, type, amount, occurred_at, note, category_id, household_id, categories(name, icon), accounts(name, icon)",
     )
     .order("occurred_at", { ascending: false })
     .order("created_at", { ascending: false });
 
   if (categoryFilter) {
     query = query.eq("category_id", categoryFilter);
+  }
+  if (accountFilter) {
+    query = query.eq("account_id", accountFilter);
   }
   if (transactionIdsForTag) {
     query = query.in("id", transactionIdsForTag.length ? transactionIdsForTag : ["-"]);
@@ -66,7 +71,7 @@ export default async function TransactionsPage({
         />
 
         <div className="flex items-center justify-end">
-          <FilterBar categories={categories ?? []} tags={tags ?? []} />
+          <FilterBar categories={categories ?? []} tags={tags ?? []} accounts={accounts ?? []} />
         </div>
 
         <TransactionList

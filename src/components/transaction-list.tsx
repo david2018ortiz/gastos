@@ -25,6 +25,7 @@ export type TransactionRow = {
   note: string | null;
   household_id?: string | null;
   categories: { name: string; icon: string | null } | null;
+  accounts?: { name: string; icon: string | null } | null;
 };
 
 function groupByDate(transactions: TransactionRow[]) {
@@ -107,9 +108,11 @@ export function TransactionList({
                             </span>
                           )}
                         </p>
-                        {t.note && (
+                        {(t.note || t.accounts) && (
                           <p className="truncate text-xs leading-tight text-ink-muted">
                             {t.note}
+                            {t.note && t.accounts && " · "}
+                            {t.accounts && `${t.accounts.icon ?? "💳"} ${t.accounts.name}`}
                           </p>
                         )}
                       </div>
