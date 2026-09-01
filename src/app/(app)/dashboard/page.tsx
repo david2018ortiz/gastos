@@ -55,6 +55,7 @@ export default async function DashboardPage({
     date?: string;
     category?: string;
     tag?: string;
+    account?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -104,6 +105,9 @@ export default async function DashboardPage({
 
   if (params.category) {
     query = query.eq("category_id", params.category);
+  }
+  if (params.account) {
+    query = query.eq("account_id", params.account);
   }
   if (transactionIdsForTag) {
     query = query.in("id", transactionIdsForTag.length ? transactionIdsForTag : ["-"]);
@@ -193,7 +197,7 @@ export default async function DashboardPage({
   }
   const tagData = Array.from(tagMap.values());
 
-  const extraParams = { category: params.category, tag: params.tag };
+  const extraParams = { category: params.category, tag: params.tag, account: params.account };
 
   return (
     <main className="flex-1 p-5">
@@ -249,6 +253,7 @@ export default async function DashboardPage({
           expenseData={expenseCategoryData}
           categories={categories ?? []}
           tags={tags ?? []}
+          accounts={accounts}
         />
 
         <TransactionList transactions={rows} />

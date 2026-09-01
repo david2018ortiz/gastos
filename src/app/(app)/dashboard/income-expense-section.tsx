@@ -27,6 +27,7 @@ export function IncomeExpenseSection({
   expenseData,
   categories,
   tags,
+  accounts = [],
 }: {
   totalIncome: number;
   totalExpense: number;
@@ -34,6 +35,7 @@ export function IncomeExpenseSection({
   expenseData: CategoryBarDatum[];
   categories: Option[];
   tags: Option[];
+  accounts?: Option[];
 }) {
   const [tab, setTab] = useState<"expense" | "income">("expense");
   const [collapsed, setCollapsed] = useState(false);
@@ -123,7 +125,7 @@ export function IncomeExpenseSection({
           <h2 className="text-sm font-medium text-ink-secondary">
             Movimientos del período
           </h2>
-          <FilterBar categories={categories} tags={tags} />
+          <FilterBar categories={categories} tags={tags} accounts={accounts} />
         </div>
       </div>
     </>
