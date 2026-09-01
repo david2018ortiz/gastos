@@ -230,12 +230,6 @@ export default async function DashboardPage({
                 </li>
               ))}
             </ul>
-            <div className="flex items-center justify-between border-t border-border pt-1.5 text-sm font-semibold">
-              <span>Total consolidado</span>
-              <span className="tabular-nums">
-                {currencyFormatter.format(totalAccountsBalance)}
-              </span>
-            </div>
           </section>
         )}
 
@@ -244,7 +238,7 @@ export default async function DashboardPage({
         <div className="text-center">
           <p className="text-xs text-ink-muted">Saldo actual</p>
           <p className="text-2xl font-semibold tabular-nums text-ink">
-            {currencyFormatter.format(balance)}
+            {currencyFormatter.format(accounts.length > 0 ? totalAccountsBalance : balance)}
           </p>
         </div>
 
