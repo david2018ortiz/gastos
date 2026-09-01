@@ -6,10 +6,18 @@ import { CurrencyInput } from "@/components/currency-input";
 import { useActionState } from "react";
 import { addDebtPayment } from "../actions";
 import type { PaymentActionState } from "../actions";
+import { AccountSelect } from "@/components/account-select";
+import type { AccountOption } from "@/lib/get-user-accounts";
 
 const initialState: PaymentActionState = { error: null };
 
-export function PaymentForm({ debtId }: { debtId: string }) {
+export function PaymentForm({
+  debtId,
+  accounts = [],
+}: {
+  debtId: string;
+  accounts?: AccountOption[];
+}) {
   const [state, formAction, pending] = useActionState(
     addDebtPayment,
     initialState,
@@ -31,6 +39,8 @@ export function PaymentForm({ debtId }: { debtId: string }) {
           className="rounded-md border px-3 py-2"
         />
       </div>
+
+      <AccountSelect accounts={accounts} label="¿De qué cuenta sale?" />
 
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

@@ -5,6 +5,8 @@ import { CurrencyInput } from "@/components/currency-input";
 import { TagPicker, type TagOption } from "@/components/tag-picker";
 import { HouseholdSelect } from "@/components/household-select";
 import type { HouseholdOption } from "@/lib/get-user-households";
+import { AccountSelect } from "@/components/account-select";
+import type { AccountOption } from "@/lib/get-user-accounts";
 
 import { useActionState } from "react";
 import { createTransaction, updateTransaction } from "./actions";
@@ -21,12 +23,14 @@ export function TransactionForm({
   categories,
   tags = [],
   households = [],
+  accounts = [],
   transaction,
   submitLabel = "Guardar transacción",
 }: {
   categories: Tables<"categories">[];
   tags?: TagOption[];
   households?: HouseholdOption[];
+  accounts?: AccountOption[];
   transaction?: TransactionWithTags;
   submitLabel?: string;
 }) {
@@ -104,6 +108,12 @@ export function TransactionForm({
           ))}
         </select>
       </div>
+
+      <AccountSelect
+        accounts={accounts}
+        defaultValue={transaction?.account_id}
+        label="¿De qué cuenta sale/entra?"
+      />
 
       <HouseholdSelect
         households={households}

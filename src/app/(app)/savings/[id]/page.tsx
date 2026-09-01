@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserAccounts } from "@/lib/get-user-accounts";
 import { SavingsProgress } from "../savings-progress";
 import { ContributionForm } from "./contribution-form";
 
@@ -31,13 +32,14 @@ export default async function SavingsGoalDetailPage({
     redirect("/login");
   }
 
-  const [{ data: goal }, { data: contributions }] = await Promise.all([
+  const [{ data: goal }, { data: contributions }, accounts] = await Promise.all([
     supabase.from("savings_goals").select("*").eq("id", id).single(),
     supabase
       .from("savings_contributions")
       .select("*")
       .eq("savings_goal_id", id)
       .order("contributed_at", { ascending: false }),
+    getUserAccounts(supabase, user.id),
   ]);
 
   if (!goal) {
@@ -63,7 +65,7 @@ export default async function SavingsGoalDetailPage({
           <h2 className="text-sm font-medium text-ink-secondary">
             Registrar aporte
           </h2>
-          <ContributionForm goalId={goal.id} />
+          <ContributionForm goalId={goal.id} accounts={accounts} />
         </section>
 
         <section className="space-y-3">

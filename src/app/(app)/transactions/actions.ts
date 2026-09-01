@@ -93,6 +93,7 @@ export async function createTransaction(
   const occurredAt = String(formData.get("occurredAt") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
   const householdId = String(formData.get("householdId") ?? "") || null;
+  const accountId = String(formData.get("accountId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -114,6 +115,7 @@ export async function createTransaction(
       occurred_at: occurredAt || undefined,
       category_id: categoryId,
       household_id: householdId,
+      account_id: accountId,
       note,
     })
     .select("id")
@@ -163,6 +165,7 @@ export async function quickAddTransaction(
   const amount = Number(formData.get("amount") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
   const householdId = String(formData.get("householdId") ?? "") || null;
+  const accountId = String(formData.get("accountId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -185,6 +188,7 @@ export async function quickAddTransaction(
       amount,
       category_id: categoryId,
       household_id: householdId,
+      account_id: accountId,
       note,
     })
     .select("id")
@@ -227,6 +231,7 @@ export async function updateTransaction(
   const occurredAt = String(formData.get("occurredAt") ?? "");
   const categoryId = String(formData.get("categoryId") ?? "") || null;
   const householdId = String(formData.get("householdId") ?? "") || null;
+  const accountId = String(formData.get("accountId") ?? "") || null;
   const note = String(formData.get("note") ?? "").trim() || null;
   const tagsRaw = String(formData.get("tags") ?? "");
 
@@ -247,6 +252,7 @@ export async function updateTransaction(
       occurred_at: occurredAt || undefined,
       category_id: categoryId,
       household_id: householdId,
+      account_id: accountId,
       note,
     })
     .eq("id", id);

@@ -108,6 +108,7 @@ export async function addDebtPayment(
   const debtId = String(formData.get("debtId") ?? "");
   const amount = Number(formData.get("amount") ?? "");
   const paidAt = String(formData.get("paidAt") ?? "") || undefined;
+  const accountId = String(formData.get("accountId") ?? "") || null;
 
   if (!Number.isFinite(amount) || amount <= 0) {
     return { error: "El monto del abono debe ser mayor a cero." };
@@ -134,6 +135,7 @@ export async function addDebtPayment(
       occurred_at: paidAt,
       note: `Abono a deuda: ${debt.name}`,
       household_id: debt.household_id,
+      account_id: accountId,
     })
     .select("id")
     .single();
@@ -148,6 +150,7 @@ export async function addDebtPayment(
     amount,
     paid_at: paidAt,
     transaction_id: transaction.id,
+    account_id: accountId,
   });
 
   if (error) {

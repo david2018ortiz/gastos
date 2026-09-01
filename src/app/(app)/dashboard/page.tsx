@@ -8,6 +8,7 @@ import { QuickAddTransaction } from "@/components/quick-add-transaction";
 import { TransactionList } from "@/components/transaction-list";
 import { PageTitleBar } from "@/components/page-title-bar";
 import { getUserHouseholds } from "@/lib/get-user-households";
+import { getUserAccounts } from "@/lib/get-user-accounts";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -74,10 +75,11 @@ export default async function DashboardPage({
 
   const { start, end } = dateRange(anchor, period);
 
-  const [{ data: categories }, { data: tags }, households] = await Promise.all([
+  const [{ data: categories }, { data: tags }, households, accounts] = await Promise.all([
     supabase.from("categories").select("id, name, icon, type").order("name"),
     supabase.from("tags").select("id, name").order("name"),
     getUserHouseholds(supabase, user.id),
+    getUserAccounts(supabase, user.id),
   ]);
 
   let transactionIdsForTag: string[] | null = null;
@@ -223,6 +225,7 @@ export default async function DashboardPage({
         categories={categories ?? []}
         tags={tags ?? []}
         households={households}
+        accounts={accounts}
       />
     </main>
   );

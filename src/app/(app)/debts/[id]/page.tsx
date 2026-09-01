@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUserAccounts } from "@/lib/get-user-accounts";
 import { DebtProgress } from "../debt-progress";
 import { PaymentForm } from "./payment-form";
 
@@ -31,13 +32,14 @@ export default async function DebtDetailPage({
     redirect("/login");
   }
 
-  const [{ data: debt }, { data: payments }] = await Promise.all([
+  const [{ data: debt }, { data: payments }, accounts] = await Promise.all([
     supabase.from("debts").select("*").eq("id", id).single(),
     supabase
       .from("debt_payments")
       .select("*")
       .eq("debt_id", id)
       .order("paid_at", { ascending: false }),
+    getUserAccounts(supabase, user.id),
   ]);
 
   if (!debt) {
@@ -68,7 +70,7 @@ export default async function DebtDetailPage({
           <h2 className="text-sm font-medium text-ink-secondary">
             Registrar abono
           </h2>
-          <PaymentForm debtId={debt.id} />
+          <PaymentForm debtId={debt.id} accounts={accounts} />
         </section>
 
         <section className="space-y-3">

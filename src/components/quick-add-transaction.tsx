@@ -8,6 +8,8 @@ import { CurrencyInput } from "@/components/currency-input";
 import { TagPicker, type TagOption } from "@/components/tag-picker";
 import { HouseholdSelect } from "@/components/household-select";
 import type { HouseholdOption } from "@/lib/get-user-households";
+import { AccountSelect } from "@/components/account-select";
+import type { AccountOption } from "@/lib/get-user-accounts";
 
 type Category = { id: string; name: string; icon: string | null; type: string };
 
@@ -41,10 +43,12 @@ export function QuickAddTransaction({
   categories,
   tags = [],
   households = [],
+  accounts = [],
 }: {
   categories: Category[];
   tags?: TagOption[];
   households?: HouseholdOption[];
+  accounts?: AccountOption[];
 }) {
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
@@ -249,6 +253,8 @@ export function QuickAddTransaction({
                 <p className="text-xs text-ink-muted">Etiquetas</p>
                 <TagPicker availableTags={tags} compact />
               </div>
+
+              <AccountSelect accounts={accounts} label="¿De qué cuenta sale/entra?" />
 
               <HouseholdSelect households={households} />
 

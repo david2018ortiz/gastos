@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { TransactionForm } from "../../transaction-form";
 import { deleteTransactionAndRedirect } from "../../actions";
 import { getUserHouseholds } from "@/lib/get-user-households";
+import { getUserAccounts } from "@/lib/get-user-accounts";
 
 export default async function EditTransactionPage({
   params,
@@ -26,6 +27,7 @@ export default async function EditTransactionPage({
     { data: tagLinks },
     { data: tags },
     households,
+    accounts,
   ] = await Promise.all([
     supabase.from("transactions").select("*").eq("id", id).single(),
     supabase.from("categories").select("*").order("name"),
@@ -35,6 +37,7 @@ export default async function EditTransactionPage({
       .eq("transaction_id", id),
     supabase.from("tags").select("id, name").order("name"),
     getUserHouseholds(supabase, user.id),
+    getUserAccounts(supabase, user.id),
   ]);
 
   if (!transaction) {
@@ -59,6 +62,7 @@ export default async function EditTransactionPage({
           categories={categories ?? []}
           tags={tags ?? []}
           households={households}
+          accounts={accounts}
           transaction={{ ...transaction, tagNames }}
           submitLabel="Guardar cambios"
         />

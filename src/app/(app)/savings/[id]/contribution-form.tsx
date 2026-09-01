@@ -6,10 +6,18 @@ import { CurrencyInput } from "@/components/currency-input";
 import { useActionState } from "react";
 import { addSavingsContribution } from "../actions";
 import type { ContributionActionState } from "../actions";
+import { AccountSelect } from "@/components/account-select";
+import type { AccountOption } from "@/lib/get-user-accounts";
 
 const initialState: ContributionActionState = { error: null };
 
-export function ContributionForm({ goalId }: { goalId: string }) {
+export function ContributionForm({
+  goalId,
+  accounts = [],
+}: {
+  goalId: string;
+  accounts?: AccountOption[];
+}) {
   const [state, formAction, pending] = useActionState(
     addSavingsContribution,
     initialState,
@@ -31,6 +39,8 @@ export function ContributionForm({ goalId }: { goalId: string }) {
           className="rounded-md border px-3 py-2"
         />
       </div>
+
+      <AccountSelect accounts={accounts} label="¿De qué cuenta sale?" />
 
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

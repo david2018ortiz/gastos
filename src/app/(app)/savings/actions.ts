@@ -107,6 +107,7 @@ export async function addSavingsContribution(
   const savingsGoalId = String(formData.get("savingsGoalId") ?? "");
   const amount = Number(formData.get("amount") ?? "");
   const contributedAt = String(formData.get("contributedAt") ?? "") || undefined;
+  const accountId = String(formData.get("accountId") ?? "") || null;
 
   if (!Number.isFinite(amount) || amount <= 0) {
     return { error: "El aporte debe ser mayor a cero." };
@@ -133,6 +134,7 @@ export async function addSavingsContribution(
       occurred_at: contributedAt,
       note: `Aporte a meta de ahorro: ${goal.name}`,
       household_id: goal.household_id,
+      account_id: accountId,
     })
     .select("id")
     .single();
@@ -147,6 +149,7 @@ export async function addSavingsContribution(
     amount,
     contributed_at: contributedAt,
     transaction_id: transaction.id,
+    account_id: accountId,
   });
 
   if (error) {

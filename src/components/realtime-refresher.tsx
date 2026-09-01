@@ -15,6 +15,7 @@ const WATCHED_TABLES = [
   "categories",
   "tags",
   "transaction_tags",
+  "accounts",
 ] as const;
 
 const WATCHED_EVENTS = ["INSERT", "UPDATE", "DELETE"] as const;
