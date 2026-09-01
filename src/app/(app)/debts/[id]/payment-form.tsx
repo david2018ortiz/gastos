@@ -8,6 +8,7 @@ import { addDebtPayment } from "../actions";
 import type { PaymentActionState } from "../actions";
 import { AccountSelect } from "@/components/account-select";
 import type { AccountOption } from "@/lib/get-user-accounts";
+import { todayInBogotaISO } from "@/lib/today";
 
 const initialState: PaymentActionState = { error: null };
 
@@ -22,7 +23,7 @@ export function PaymentForm({
     addDebtPayment,
     initialState,
   );
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInBogotaISO();
 
   return (
     <form action={formAction} className="space-y-3">

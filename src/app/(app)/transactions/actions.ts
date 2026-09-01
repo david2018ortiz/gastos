@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { todayInBogotaISO } from "@/lib/today";
 
 export type TransactionActionState = { error: string | null };
 
@@ -186,6 +187,7 @@ export async function quickAddTransaction(
       user_id: user.id,
       type,
       amount,
+      occurred_at: todayInBogotaISO(),
       category_id: categoryId,
       household_id: householdId,
       account_id: accountId,

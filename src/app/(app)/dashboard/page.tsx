@@ -10,6 +10,7 @@ import { PageTitleBar } from "@/components/page-title-bar";
 import Link from "next/link";
 import { getUserHouseholds } from "@/lib/get-user-households";
 import { getUserAccounts } from "@/lib/get-user-accounts";
+import { todayInBogota } from "@/lib/today";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -64,7 +65,7 @@ export default async function DashboardPage({
       ? params.period
       : "month";
 
-  const anchor = params.date ? new Date(params.date + "T00:00:00") : new Date();
+  const anchor = params.date ? new Date(params.date + "T00:00:00") : todayInBogota();
 
   const supabase = await createClient();
   const {

@@ -8,6 +8,7 @@ import { addSavingsContribution } from "../actions";
 import type { ContributionActionState } from "../actions";
 import { AccountSelect } from "@/components/account-select";
 import type { AccountOption } from "@/lib/get-user-accounts";
+import { todayInBogotaISO } from "@/lib/today";
 
 const initialState: ContributionActionState = { error: null };
 
@@ -22,7 +23,7 @@ export function ContributionForm({
     addSavingsContribution,
     initialState,
   );
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInBogotaISO();
 
   return (
     <form action={formAction} className="space-y-3">

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables } from "./supabase/database.types";
+import { todayInBogotaISO } from "./today";
 
 export type AlertWithMessage = Tables<"alerts"> & { message: string };
 
@@ -64,7 +65,7 @@ export async function evaluateAlerts(
   if (!alerts || alerts.length === 0) return [];
 
   const now = new Date();
-  const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+  const monthStart = `${todayInBogotaISO().slice(0, 7)}-01`;
 
   const [{ data: monthTransactions }, { data: debts }, { data: goals }, { data: contributions }] =
     await Promise.all([

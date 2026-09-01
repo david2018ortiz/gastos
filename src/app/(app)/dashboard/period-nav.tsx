@@ -40,9 +40,12 @@ function step(anchor: Date, period: Period, direction: 1 | -1): Date {
   return addYears(anchor, direction);
 }
 
+const BOGOTA_TZ = "America/Bogota";
+
 export function formatPeriodLabel(anchor: Date, period: Period): string {
   if (period === "day") {
     return new Intl.DateTimeFormat("es-CO", {
+      timeZone: BOGOTA_TZ,
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -53,13 +56,19 @@ export function formatPeriodLabel(anchor: Date, period: Period): string {
     const mondayOffset = day === 0 ? -6 : 1 - day;
     const start = addDays(anchor, mondayOffset);
     const end = addDays(start, 6);
-    const fmt = new Intl.DateTimeFormat("es-CO", { day: "numeric", month: "short" });
+    const fmt = new Intl.DateTimeFormat("es-CO", {
+      timeZone: BOGOTA_TZ,
+      day: "numeric",
+      month: "short",
+    });
     return `${fmt.format(start)} – ${fmt.format(end)}`;
   }
   if (period === "month") {
-    return new Intl.DateTimeFormat("es-CO", { month: "long", year: "numeric" }).format(
-      anchor,
-    );
+    return new Intl.DateTimeFormat("es-CO", {
+      timeZone: BOGOTA_TZ,
+      month: "long",
+      year: "numeric",
+    }).format(anchor);
   }
   return String(anchor.getFullYear());
 }

@@ -7,6 +7,7 @@ import { HouseholdSelect } from "@/components/household-select";
 import type { HouseholdOption } from "@/lib/get-user-households";
 import { AccountSelect } from "@/components/account-select";
 import type { AccountOption } from "@/lib/get-user-accounts";
+import { todayInBogotaISO } from "@/lib/today";
 
 import { useActionState } from "react";
 import { createTransaction, updateTransaction } from "./actions";
@@ -40,7 +41,7 @@ export function TransactionForm({
     FormData
   >(action, initialState);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInBogotaISO();
 
   return (
     <form action={formAction} className="space-y-4">
