@@ -19,6 +19,13 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 0,
 });
 
+const compactCurrencyFormatter = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  maximumFractionDigits: 0,
+  notation: "compact",
+});
+
 function toISODate(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
@@ -136,33 +143,8 @@ export default async function DashboardPage({
     0,
   );
 
-  const householdIds = households.map((h) => h.id);
-  const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
-
-  const [{ data: transactions }, { data: recentTx }] = await Promise.all([
-    query,
-    householdIds.length > 0
-      ? supabase
-          .from("transactions")
-          .select("user_id")
-          .in("household_id", householdIds)
-          .neq("user_id", user.id)
-          .gte("created_at", since)
-      : Promise.resolve({ data: null as { user_id: string }[] | null }),
-  ]);
-
+  const { data: transactions } = await query;
   const rows = transactions ?? [];
-
-  let recentHouseholdActivity: { count: number; names: string[] } | null = null;
-  if (recentTx && recentTx.length > 0) {
-    const userIds = Array.from(new Set(recentTx.map((t) => t.user_id)));
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, full_name")
-      .in("id", userIds);
-    const names = (profiles ?? []).map((p) => p.full_name || "Tu familiar");
-    recentHouseholdActivity = { count: recentTx.length, names };
-  }
 
   const totalIncome = rows
     .filter((t) => t.type === "income")
@@ -212,38 +194,22 @@ export default async function DashboardPage({
       <div className="mx-auto max-w-sm space-y-4">
         <PageTitleBar title="Resumen" userId={user.id} />
 
-        {recentHouseholdActivity && (
-          <p className="rounded-lg border border-brand bg-brand-soft px-3 py-2 text-xs text-ink">
-            🏠 {recentHouseholdActivity.names.join(" y ")} agregó{" "}
-            {recentHouseholdActivity.count === 1
-              ? "un movimiento compartido"
-              : `${recentHouseholdActivity.count} movimientos compartidos`}{" "}
-            en los últimos 2 días.
-          </p>
-        )}
-
         {accounts.length > 0 && (
-          <section className="space-y-2 rounded-lg border p-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-medium text-ink-secondary">Cuentas</h2>
-              <Link href="/accounts" className="text-xs underline">
-                Ver todas
+          <div className="-mx-5 flex gap-1.5 overflow-x-auto px-5 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {accounts.map((account) => (
+              <Link
+                key={account.id}
+                href="/accounts"
+                className="flex shrink-0 items-center gap-1.5 rounded-full bg-surface-raised px-2.5 py-1 text-xs"
+              >
+                <AccountIcon type={account.icon_type} color={account.color} size={11} />
+                <span className="text-ink-secondary">{account.name}</span>
+                <span className="font-medium tabular-nums">
+                  {compactCurrencyFormatter.format(balanceByAccount.get(account.id) ?? 0)}
+                </span>
               </Link>
-            </div>
-            <ul className="space-y-1.5">
-              {accounts.map((account) => (
-                <li key={account.id} className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2">
-                    <AccountIcon type={account.icon_type} color={account.color} size={14} />
-                    {account.name}
-                  </span>
-                  <span className="tabular-nums font-medium">
-                    {currencyFormatter.format(balanceByAccount.get(account.id) ?? 0)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
+            ))}
+          </div>
         )}
 
         <PeriodNav anchor={anchor} period={period} extraParams={extraParams} />
