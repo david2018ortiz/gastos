@@ -13,9 +13,9 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
   const [state, formAction, pending] = useActionState(updateProfile, initialState);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-3">
       <div className="space-y-1">
-        <label htmlFor="fullName" className="text-sm font-medium">
+        <label htmlFor="fullName" className="text-xs font-medium text-ink-secondary">
           Nombre
         </label>
         <input
@@ -23,12 +23,12 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           name="fullName"
           type="text"
           defaultValue={profile.full_name ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-1.5 text-sm"
         />
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="phone" className="text-sm font-medium">
+        <label htmlFor="phone" className="text-xs font-medium text-ink-secondary">
           Teléfono
         </label>
         <input
@@ -36,12 +36,12 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           name="phone"
           type="tel"
           defaultValue={profile.phone ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-1.5 text-sm"
         />
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="age" className="text-sm font-medium">
+        <label htmlFor="age" className="text-xs font-medium text-ink-secondary">
           Edad
         </label>
         <input
@@ -51,7 +51,7 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           min={0}
           max={120}
           defaultValue={profile.age ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-1.5 text-sm"
         />
       </div>
 

@@ -12,9 +12,9 @@ export function ChangePasswordForm() {
   const [state, formAction, pending] = useActionState(changePassword, initialState);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-3">
       <div className="space-y-1">
-        <label htmlFor="password" className="text-sm font-medium">
+        <label htmlFor="password" className="text-xs font-medium text-ink-secondary">
           Nueva contraseña
         </label>
         <input
@@ -24,12 +24,12 @@ export function ChangePasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-1.5 text-sm"
         />
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="confirmPassword" className="text-sm font-medium">
+        <label htmlFor="confirmPassword" className="text-xs font-medium text-ink-secondary">
           Confirmar contraseña
         </label>
         <input
@@ -39,7 +39,7 @@ export function ChangePasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-1.5 text-sm"
         />
       </div>
 
