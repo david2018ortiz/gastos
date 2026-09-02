@@ -28,7 +28,7 @@ export function TagForm({ households }: { households: HouseholdOption[] }) {
           type="text"
           required
           placeholder="Nueva etiqueta"
-          className="flex-1 rounded-md border px-3 py-2"
+          className="flex-1 rounded-xl border px-3 py-2"
         />
         <button
           type="submit"

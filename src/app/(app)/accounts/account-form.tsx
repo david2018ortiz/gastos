@@ -27,14 +27,14 @@ export function AccountForm({ households }: { households: HouseholdOption[] }) {
           type="text"
           placeholder="💳"
           maxLength={2}
-          className="w-14 rounded-md border px-2 py-2 text-center"
+          className="w-14 rounded-xl border px-2 py-2 text-center"
         />
         <input
           name="name"
           type="text"
           required
           placeholder="Nombre (ej. Davivienda, Nequi)"
-          className="flex-1 rounded-md border px-3 py-2 text-sm"
+          className="flex-1 rounded-xl border px-3 py-2 text-sm"
         />
       </div>
       <HouseholdSelect households={households} />

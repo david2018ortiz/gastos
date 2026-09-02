@@ -42,7 +42,7 @@ export function DebtForm({
           required
           defaultValue={debt?.name ?? ""}
           placeholder="ej. Tarjeta de crédito"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 
@@ -64,7 +64,7 @@ export function DebtForm({
           name="dueDate"
           type="date"
           defaultValue={debt?.due_date ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

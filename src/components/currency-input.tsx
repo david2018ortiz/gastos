@@ -79,7 +79,7 @@ export function CurrencyInput({
         onChange={handleChange}
         className={
           className ??
-          "w-full rounded-md border py-2 pl-7 pr-3 tabular-nums"
+          "w-full rounded-xl border py-2 pl-7 pr-3 tabular-nums"
         }
       />
       <input type="hidden" name={name} value={hiddenValue} />

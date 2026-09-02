@@ -53,7 +53,7 @@ export function ForgotPasswordForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

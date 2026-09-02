@@ -37,7 +37,7 @@ export function ResetPasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 
@@ -52,7 +52,7 @@ export function ResetPasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

@@ -20,7 +20,7 @@ export function CreateHouseholdForm() {
         type="text"
         required
         placeholder="ej. Familia Ortiz"
-        className="w-full rounded-md border px-3 py-2"
+        className="w-full rounded-xl border px-3 py-2"
       />
       {state.error && (
         <p className="text-sm text-negative feedback-enter" role="alert">

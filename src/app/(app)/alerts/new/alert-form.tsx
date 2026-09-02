@@ -33,7 +33,7 @@ export function AlertForm({
           name="type"
           value={type}
           onChange={(e) => setType(e.target.value as typeof type)}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         >
           <option value="category_budget">Presupuesto de categoría</option>
           <option value="debt_due">Deuda próxima a vencer</option>
@@ -58,7 +58,7 @@ export function AlertForm({
                 ) as HTMLInputElement;
                 nameInput.value = e.currentTarget.selectedOptions[0]?.text ?? "";
               }}
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             >
               <option value="">Elige una categoría</option>
               {categories.map((c) => (
@@ -95,7 +95,7 @@ export function AlertForm({
                 ) as HTMLInputElement;
                 nameInput.value = e.currentTarget.selectedOptions[0]?.text ?? "";
               }}
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             >
               <option value="">Elige una deuda</option>
               {debts.map((d) => (
@@ -118,7 +118,7 @@ export function AlertForm({
               step="1"
               defaultValue={7}
               required
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
         </>
@@ -141,7 +141,7 @@ export function AlertForm({
                 ) as HTMLInputElement;
                 nameInput.value = e.currentTarget.selectedOptions[0]?.text ?? "";
               }}
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             >
               <option value="">Elige una meta</option>
               {savingsGoals.map((g) => (
@@ -164,7 +164,7 @@ export function AlertForm({
               step="1"
               defaultValue={30}
               required
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
         </>

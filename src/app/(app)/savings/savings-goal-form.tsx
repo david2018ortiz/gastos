@@ -42,7 +42,7 @@ export function SavingsGoalForm({
           required
           defaultValue={goal?.name ?? ""}
           placeholder="ej. Vacaciones"
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 
@@ -64,7 +64,7 @@ export function SavingsGoalForm({
           name="targetDate"
           type="date"
           defaultValue={goal?.target_date ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

@@ -23,7 +23,7 @@ export function HouseholdSelect({
         id="householdId"
         name="householdId"
         defaultValue={defaultValue ?? ""}
-        className="w-full rounded-md border px-3 py-2"
+        className="w-full rounded-xl border px-3 py-2"
       >
         <option value="">Solo yo (personal)</option>
         {households.map((h) => (

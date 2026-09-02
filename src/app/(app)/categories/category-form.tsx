@@ -54,7 +54,7 @@ export function CategoryForm({
           type="text"
           required
           defaultValue={category?.name ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

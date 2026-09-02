@@ -173,7 +173,7 @@ export function QuickAddTransaction({
                   type="button"
                   onClick={() => setType("expense")}
                   className={
-                    "flex-1 rounded-md py-2 text-sm font-medium transition-colors " +
+                    "flex-1 rounded-full py-2 text-sm font-medium transition-all active:scale-[0.97] " +
                     (type === "expense"
                       ? "bg-negative/15 text-negative"
                       : "bg-surface-raised text-ink-secondary")
@@ -185,7 +185,7 @@ export function QuickAddTransaction({
                   type="button"
                   onClick={() => setType("income")}
                   className={
-                    "flex-1 rounded-md py-2 text-sm font-medium transition-colors " +
+                    "flex-1 rounded-full py-2 text-sm font-medium transition-all active:scale-[0.97] " +
                     (type === "income"
                       ? "bg-positive/15 text-positive"
                       : "bg-surface-raised text-ink-secondary")
@@ -210,7 +210,7 @@ export function QuickAddTransaction({
                 required
                 value={amount}
                 onValueChange={setAmount}
-                className="w-full rounded-md border py-3 pl-7 pr-3 text-lg tabular-nums"
+                className="w-full rounded-xl border py-3 pl-7 pr-3 text-lg tabular-nums"
               />
 
               <input
@@ -219,7 +219,7 @@ export function QuickAddTransaction({
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Descripción (ej. Hamburguesa)"
-                className="w-full rounded-md border px-3 py-2 text-sm"
+                className="w-full rounded-xl border px-3 py-2 text-sm"
               />
 
               {filteredCategories.length > 0 && (
@@ -232,7 +232,7 @@ export function QuickAddTransaction({
                     name="categoryId"
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
-                    className="w-full rounded-md border px-3 py-2 text-sm"
+                    className="w-full rounded-xl border px-3 py-2 text-sm"
                   >
                     <option value="">Sin categoría</option>
                     {filteredCategories.map((c) => (

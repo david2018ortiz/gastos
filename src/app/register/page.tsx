@@ -27,7 +27,7 @@ export default function RegisterPage() {
               name="fullName"
               type="text"
               autoComplete="name"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
 
@@ -41,7 +41,7 @@ export default function RegisterPage() {
               type="email"
               required
               autoComplete="email"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
 
@@ -56,7 +56,7 @@ export default function RegisterPage() {
               required
               minLength={8}
               autoComplete="new-password"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
 

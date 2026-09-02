@@ -5,6 +5,7 @@ import { CreateHouseholdForm } from "./create-household-form";
 import { InviteForm } from "./invite-form";
 import { HouseholdSettings } from "./household-settings";
 import { acceptInvitation, declineInvitation, leaveHousehold, removeMember } from "./actions";
+import { buttonClasses } from "@/components/button-styles";
 
 export default async function HouseholdPage() {
   const supabase = await createClient();
@@ -112,19 +113,13 @@ export default async function HouseholdPage() {
                   <div className="flex gap-2">
                     <form action={acceptInvitation}>
                       <input type="hidden" name="invitationId" value={inv.id} />
-                      <button
-                        type="submit"
-                        className="rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-brand-ink"
-                      >
+                      <button type="submit" className={buttonClasses.primaryInline}>
                         Aceptar
                       </button>
                     </form>
                     <form action={declineInvitation}>
                       <input type="hidden" name="invitationId" value={inv.id} />
-                      <button
-                        type="submit"
-                        className="rounded-md border border-border px-3 py-1.5 text-xs text-ink-secondary"
-                      >
+                      <button type="submit" className={buttonClasses.ghost}>
                         Rechazar
                       </button>
                     </form>

@@ -24,7 +24,7 @@ export function ChangePasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-1.5 text-sm"
+          className="w-full rounded-xl border px-3 py-1.5 text-sm"
         />
       </div>
 
@@ -39,7 +39,7 @@ export function ChangePasswordForm() {
           required
           minLength={8}
           autoComplete="new-password"
-          className="w-full rounded-md border px-3 py-1.5 text-sm"
+          className="w-full rounded-xl border px-3 py-1.5 text-sm"
         />
       </div>
 

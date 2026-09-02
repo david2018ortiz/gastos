@@ -74,12 +74,12 @@ export function IncomeExpenseSection({
 
   return (
     <>
-      <div className="flex h-9 gap-0.5 rounded-md bg-surface-raised p-0.5">
+      <div className="flex h-9 gap-0.5 rounded-full bg-surface-raised p-0.5">
         <button
           type="button"
           onClick={() => setTab("income")}
           className={
-            "flex flex-1 items-center justify-center gap-1.5 rounded text-xs font-medium transition-colors " +
+            "flex flex-1 items-center justify-center gap-1.5 rounded-full text-xs font-medium transition-colors " +
             (tab === "income" ? "bg-surface text-ink shadow-sm" : "text-ink-muted")
           }
           aria-pressed={tab === "income"}
@@ -93,7 +93,7 @@ export function IncomeExpenseSection({
           type="button"
           onClick={() => setTab("expense")}
           className={
-            "flex flex-1 items-center justify-center gap-1.5 rounded text-xs font-medium transition-colors " +
+            "flex flex-1 items-center justify-center gap-1.5 rounded-full text-xs font-medium transition-colors " +
             (tab === "expense" ? "bg-surface text-ink shadow-sm" : "text-ink-muted")
           }
           aria-pressed={tab === "expense"}

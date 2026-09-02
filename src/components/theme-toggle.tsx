@@ -32,7 +32,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs text-ink-secondary transition-colors hover:bg-surface-raised"
+      className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-ink-secondary transition-all active:scale-[0.97] hover:bg-surface-raised"
       aria-label={`Tema ${label}. Tocar para cambiar a ${theme === "light" ? "oscuro" : "claro"}.`}
     >
       <span aria-hidden="true">{icon}</span>

@@ -25,7 +25,7 @@ export function AccountSelect({
         id="accountId"
         name="accountId"
         defaultValue={defaultValue ?? ""}
-        className="w-full rounded-md border px-3 py-2"
+        className="w-full rounded-xl border px-3 py-2"
       >
         <option value="">Sin cuenta</option>
         {accounts.map((a) => (

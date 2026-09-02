@@ -17,7 +17,7 @@ export function AppleSignInButton() {
     <button
       type="button"
       onClick={handleClick}
-      className="min-h-11 w-full rounded-md bg-black py-2 font-medium text-white transition-all duration-150 active:scale-[0.97] hover:opacity-90"
+      className="min-h-11 w-full rounded-full bg-black py-2 font-medium text-white transition-all duration-150 active:scale-[0.97] hover:opacity-90"
     >
       Continuar con Apple
     </button>

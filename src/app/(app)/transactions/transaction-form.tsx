@@ -87,7 +87,7 @@ export function TransactionForm({
           name="occurredAt"
           type="date"
           defaultValue={transaction?.occurred_at ?? today}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function TransactionForm({
           id="categoryId"
           name="categoryId"
           defaultValue={transaction?.category_id ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         >
           <option value="">Sin categoría</option>
           {categories.map((category) => (
@@ -140,7 +140,7 @@ export function TransactionForm({
           type="text"
           placeholder="ej. Hamburguesa, mercado del mes…"
           defaultValue={transaction?.note ?? ""}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-xl border px-3 py-2"
         />
       </div>
 

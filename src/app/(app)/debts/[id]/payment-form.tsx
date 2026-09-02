@@ -37,7 +37,7 @@ export function PaymentForm({
           name="paidAt"
           type="date"
           defaultValue={today}
-          className="rounded-md border px-3 py-2"
+          className="rounded-xl border px-3 py-2"
         />
       </div>
 

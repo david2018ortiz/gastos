@@ -31,7 +31,7 @@ export function InviteForm({ householdId }: { householdId: string }) {
           type="email"
           required
           placeholder="correo@ejemplo.com"
-          className="flex-1 rounded-md border px-3 py-2 text-sm"
+          className="flex-1 rounded-xl border px-3 py-2 text-sm"
         />
         <button
           type="submit"

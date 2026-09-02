@@ -23,7 +23,7 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           name="fullName"
           type="text"
           defaultValue={profile.full_name ?? ""}
-          className="w-full rounded-md border px-3 py-1.5 text-sm"
+          className="w-full rounded-xl border px-3 py-1.5 text-sm"
         />
       </div>
 
@@ -36,7 +36,7 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           name="phone"
           type="tel"
           defaultValue={profile.phone ?? ""}
-          className="w-full rounded-md border px-3 py-1.5 text-sm"
+          className="w-full rounded-xl border px-3 py-1.5 text-sm"
         />
       </div>
 
@@ -51,7 +51,7 @@ export function ProfileForm({ profile }: { profile: Tables<"profiles"> }) {
           min={0}
           max={120}
           defaultValue={profile.age ?? ""}
-          className="w-full rounded-md border px-3 py-1.5 text-sm"
+          className="w-full rounded-xl border px-3 py-1.5 text-sm"
         />
       </div>
 

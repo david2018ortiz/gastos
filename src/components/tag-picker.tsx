@@ -100,7 +100,7 @@ export function TagPicker({
         placeholder={
           compact ? "Nueva etiqueta…" : "Escribe una etiqueta nueva y pulsa Enter"
         }
-        className="w-full rounded-md border px-3 py-2 text-sm"
+        className="w-full rounded-xl border px-3 py-2 text-sm"
       />
     </div>
   );

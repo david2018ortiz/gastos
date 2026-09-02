@@ -33,7 +33,7 @@ export default function LoginPage() {
               type="email"
               required
               autoComplete="email"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
               type="password"
               required
               autoComplete="current-password"
-              className="w-full rounded-md border px-3 py-2"
+              className="w-full rounded-xl border px-3 py-2"
             />
           </div>
 
