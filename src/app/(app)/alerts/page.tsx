@@ -50,6 +50,7 @@ export default async function AlertsPage() {
       <div className="mx-auto max-w-sm space-y-8">
         <PageTitleBar
           title="Alertas"
+          userId={user.id}
           action={
             <Link href="/alerts/new" className={buttonClasses.primaryInline}>
               Nueva

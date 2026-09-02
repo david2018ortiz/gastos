@@ -26,6 +26,7 @@ export default async function CategoriesPage() {
       <div className="mx-auto max-w-sm space-y-6">
         <PageTitleBar
           title="Categorías"
+          userId={user.id}
           action={
             <Link href="/categories/new" className={buttonClasses.primaryInline}>
               Nueva

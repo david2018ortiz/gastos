@@ -90,7 +90,7 @@ export default async function HouseholdPage() {
   return (
     <main className="flex-1 p-5">
       <div className="mx-auto max-w-sm space-y-6">
-        <PageTitleBar title="Familia" />
+        <PageTitleBar title="Familia" userId={user.id} />
 
         {myIncoming.length > 0 && (
           <section className="space-y-3">

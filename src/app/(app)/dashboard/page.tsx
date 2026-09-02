@@ -78,21 +78,31 @@ export default async function DashboardPage({
 
   const { start, end } = dateRange(anchor, period);
 
-  const [{ data: categories }, { data: tags }, households, accounts] = await Promise.all([
+  // Todo lo que no depende de resultados previos se pide en un solo
+  // Promise.all: son varias consultas distintas, pero al lanzarlas juntas
+  // solo se paga UNA ronda de latencia servidor↔Supabase en vez de una
+  // por cada una — se nota especialmente con datos móviles lentos.
+  const [
+    { data: categories },
+    { data: tags },
+    households,
+    accounts,
+    { data: accountTransactions },
+    { data: tagLinks },
+  ] = await Promise.all([
     supabase.from("categories").select("id, name, icon, type").order("name"),
     supabase.from("tags").select("id, name").order("name"),
     getUserHouseholds(supabase, user.id),
     getUserAccounts(supabase, user.id),
+    // Saldo de cada cuenta: no depende del período seleccionado, es
+    // acumulado (todo lo que ha entrado/salido de esa cuenta desde siempre).
+    supabase.from("transactions").select("account_id, type, amount").not("account_id", "is", null),
+    params.tag
+      ? supabase.from("transaction_tags").select("transaction_id").eq("tag_id", params.tag)
+      : Promise.resolve({ data: null as { transaction_id: string }[] | null }),
   ]);
 
-  let transactionIdsForTag: string[] | null = null;
-  if (params.tag) {
-    const { data: tagLinks } = await supabase
-      .from("transaction_tags")
-      .select("transaction_id")
-      .eq("tag_id", params.tag);
-    transactionIdsForTag = (tagLinks ?? []).map((l) => l.transaction_id);
-  }
+  const transactionIdsForTag = params.tag ? (tagLinks ?? []).map((l) => l.transaction_id) : null;
 
   let query = supabase
     .from("transactions")
@@ -114,16 +124,6 @@ export default async function DashboardPage({
     query = query.in("id", transactionIdsForTag.length ? transactionIdsForTag : ["-"]);
   }
 
-  const { data: transactions } = await query;
-  const rows = transactions ?? [];
-
-  // Saldo de cada cuenta: no depende del período seleccionado, es
-  // acumulado (todo lo que ha entrado/salido de esa cuenta desde siempre).
-  const { data: accountTransactions } = await supabase
-    .from("transactions")
-    .select("account_id, type, amount")
-    .not("account_id", "is", null);
-
   const balanceByAccount = new Map<string, number>();
   for (const t of accountTransactions ?? []) {
     if (!t.account_id) continue;
@@ -136,25 +136,31 @@ export default async function DashboardPage({
   );
 
   const householdIds = households.map((h) => h.id);
-  let recentHouseholdActivity: { count: number; names: string[] } | null = null;
-  if (householdIds.length > 0) {
-    const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
-    const { data: recentTx } = await supabase
-      .from("transactions")
-      .select("user_id")
-      .in("household_id", householdIds)
-      .neq("user_id", user.id)
-      .gte("created_at", since);
+  const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
 
-    if (recentTx && recentTx.length > 0) {
-      const userIds = Array.from(new Set(recentTx.map((t) => t.user_id)));
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, full_name")
-        .in("id", userIds);
-      const names = (profiles ?? []).map((p) => p.full_name || "Tu familiar");
-      recentHouseholdActivity = { count: recentTx.length, names };
-    }
+  const [{ data: transactions }, { data: recentTx }] = await Promise.all([
+    query,
+    householdIds.length > 0
+      ? supabase
+          .from("transactions")
+          .select("user_id")
+          .in("household_id", householdIds)
+          .neq("user_id", user.id)
+          .gte("created_at", since)
+      : Promise.resolve({ data: null as { user_id: string }[] | null }),
+  ]);
+
+  const rows = transactions ?? [];
+
+  let recentHouseholdActivity: { count: number; names: string[] } | null = null;
+  if (recentTx && recentTx.length > 0) {
+    const userIds = Array.from(new Set(recentTx.map((t) => t.user_id)));
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", userIds);
+    const names = (profiles ?? []).map((p) => p.full_name || "Tu familiar");
+    recentHouseholdActivity = { count: recentTx.length, names };
   }
 
   const totalIncome = rows
@@ -203,7 +209,7 @@ export default async function DashboardPage({
   return (
     <main className="flex-1 p-5">
       <div className="mx-auto max-w-sm space-y-4">
-        <PageTitleBar title="Resumen" />
+        <PageTitleBar title="Resumen" userId={user.id} />
 
         {recentHouseholdActivity && (
           <p className="rounded-lg border border-brand bg-brand-soft px-3 py-2 text-xs text-ink">

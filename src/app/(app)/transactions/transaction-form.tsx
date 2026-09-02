@@ -104,6 +104,7 @@ export function TransactionForm({
           <option value="">Sin categoría</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
+              {category.icon ? `${category.icon} ` : ""}
               {category.name}
             </option>
           ))}

@@ -43,6 +43,7 @@ export default async function ProfilePage() {
       <div className="mx-auto max-w-sm space-y-10">
         <PageTitleBar
           title="Perfil"
+          userId={user.id}
           action={
             <>
               <ThemeToggle />

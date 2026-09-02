@@ -27,6 +27,7 @@ export default async function DebtsPage() {
       <div className="mx-auto max-w-sm space-y-6">
         <PageTitleBar
           title="Deudas"
+          userId={user.id}
           action={
             <Link href="/debts/new" className={buttonClasses.primaryInline}>
               Nueva

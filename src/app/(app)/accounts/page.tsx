@@ -40,7 +40,7 @@ export default async function AccountsPage() {
   return (
     <main className="flex-1 p-5">
       <div className="mx-auto max-w-sm space-y-6">
-        <PageTitleBar title="Cuentas" />
+        <PageTitleBar title="Cuentas" userId={user.id} />
 
         <div className="text-center">
           <p className="text-xs text-ink-muted">Total consolidado</p>

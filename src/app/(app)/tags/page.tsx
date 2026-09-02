@@ -24,7 +24,7 @@ export default async function TagsPage() {
   return (
     <main className="flex-1 p-6">
       <div className="mx-auto max-w-sm space-y-6">
-        <PageTitleBar title="Etiquetas" />
+        <PageTitleBar title="Etiquetas" userId={user.id} />
 
         <TagForm households={households} />
 

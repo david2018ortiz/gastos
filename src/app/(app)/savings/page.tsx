@@ -27,6 +27,7 @@ export default async function SavingsPage() {
       <div className="mx-auto max-w-sm space-y-6">
         <PageTitleBar
           title="Ahorro"
+          userId={user.id}
           action={
             <Link href="/savings/new" className={buttonClasses.primaryInline}>
               Nueva meta

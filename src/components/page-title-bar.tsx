@@ -7,27 +7,26 @@ import { NavMenu } from "./nav-menu";
 export async function PageTitleBar({
   title,
   action,
+  userId,
 }: {
   title: string;
   action?: ReactNode;
+  // La página que renderiza esta barra ya llamó a supabase.auth.getUser()
+  // (todas redirigen a /login si no hay sesión), así que se pasa el id en
+  // vez de volver a preguntarle a Supabase Auth — evitaba una ronda de red
+  // duplicada en cada carga, en toda la app.
+  userId: string;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  const triggeredAlerts = user ? await evaluateAlerts(supabase, user.id) : [];
+  const [triggeredAlerts, { data: incomingInvitations }] = await Promise.all([
+    evaluateAlerts(supabase, userId),
+    supabase.from("household_invitations").select("id, invited_by").eq("status", "pending"),
+  ]);
 
-  let pendingInvitations = 0;
-  if (user) {
-    const { data: incomingInvitations } = await supabase
-      .from("household_invitations")
-      .select("id, invited_by")
-      .eq("status", "pending");
-    pendingInvitations = (incomingInvitations ?? []).filter(
-      (inv) => inv.invited_by !== user.id,
-    ).length;
-  }
+  const pendingInvitations = (incomingInvitations ?? []).filter(
+    (inv) => inv.invited_by !== userId,
+  ).length;
 
   return (
     <div className="flex items-center justify-between gap-2">

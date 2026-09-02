@@ -63,6 +63,7 @@ export default async function TransactionsPage({
       <div className="mx-auto max-w-sm space-y-6">
         <PageTitleBar
           title="Transacciones"
+          userId={user.id}
           action={
             <Link href="/transactions/new" className={buttonClasses.primaryInline}>
               Nueva

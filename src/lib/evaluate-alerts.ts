@@ -99,6 +99,7 @@ export async function evaluateAlerts(
   }
 
   const triggered: AlertWithMessage[] = [];
+  const statusUpdates: PromiseLike<unknown>[] = [];
 
   for (const alert of alerts) {
     let isTriggered = false;
@@ -136,13 +137,17 @@ export async function evaluateAlerts(
 
     const newStatus = isTriggered ? "triggered" : "active";
     if (newStatus !== alert.status) {
-      await supabase.from("alerts").update({ status: newStatus }).eq("id", alert.id);
+      statusUpdates.push(
+        supabase.from("alerts").update({ status: newStatus }).eq("id", alert.id),
+      );
     }
 
     if (isTriggered) {
       triggered.push({ ...alert, status: newStatus, message });
     }
   }
+
+  await Promise.all(statusUpdates);
 
   return triggered;
 }
