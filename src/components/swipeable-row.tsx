@@ -3,7 +3,33 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 
-const ACTION_WIDTH = 76;
+const ACTION_WIDTH = 56;
+
+function PencilIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M13.5 7.5 16.5 10.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 7h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7 7v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 11v6M14 11v6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export function SwipeableRow({
   children,
@@ -62,9 +88,11 @@ export function SwipeableRow({
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-y-1 left-0" style={{ width: ACTION_WIDTH }}>
-        <div className="flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-brand text-xs font-medium text-brand-ink mx-1.5">
-          <span aria-hidden="true">✏️</span>
-          Editar
+        <div
+          className="flex h-full items-center justify-center rounded-xl bg-brand text-brand-ink mx-1.5"
+          aria-label="Editar"
+        >
+          <PencilIcon />
         </div>
       </div>
       <form
@@ -75,10 +103,10 @@ export function SwipeableRow({
         <input type="hidden" name="id" value={deleteId} />
         <button
           type="submit"
-          className="flex h-full w-[calc(100%-12px)] mx-1.5 flex-col items-center justify-center gap-1 rounded-xl bg-negative text-xs font-medium text-white"
+          aria-label="Eliminar"
+          className="flex h-full w-[calc(100%-12px)] mx-1.5 items-center justify-center rounded-xl bg-negative text-white"
         >
-          <span aria-hidden="true">🗑️</span>
-          Eliminar
+          <TrashIcon />
         </button>
       </form>
 
