@@ -101,7 +101,7 @@ export function PeriodNav({
       <button
         type="button"
         onClick={() => router.push(buildHref(prev, period))}
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border text-xs"
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-xs active:scale-[0.94] transition-transform"
         aria-label="Período anterior"
       >
         ←
@@ -116,7 +116,7 @@ export function PeriodNav({
           aria-label="Tipo de período"
           value={period}
           onChange={(e) => router.push(buildHref(anchor, e.target.value as Period))}
-          className="h-7 cursor-pointer appearance-none rounded-md border border-border bg-surface pl-2 pr-5 text-[11px] font-medium text-ink-secondary"
+          className="h-7 cursor-pointer appearance-none rounded-full border border-border bg-surface pl-3 pr-5 text-[11px] font-medium text-ink-secondary"
         >
           {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
             <option key={p} value={p}>
@@ -135,7 +135,7 @@ export function PeriodNav({
       <button
         type="button"
         onClick={() => router.push(buildHref(next, period))}
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border text-xs"
+        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-xs active:scale-[0.94] transition-transform"
         aria-label="Período siguiente"
       >
         →

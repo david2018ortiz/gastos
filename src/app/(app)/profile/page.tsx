@@ -10,15 +10,15 @@ import { PageTitleBar } from "@/components/page-title-bar";
 import { getUserAccounts } from "@/lib/get-user-accounts";
 
 const navLinks = [
-  { href: "/dashboard", label: "Resumen" },
-  { href: "/accounts", label: "Cuentas" },
-  { href: "/transactions", label: "Transacciones" },
-  { href: "/categories", label: "Categorías" },
-  { href: "/tags", label: "Etiquetas" },
-  { href: "/debts", label: "Deudas" },
-  { href: "/savings", label: "Ahorro" },
-  { href: "/alerts", label: "Alertas" },
-  { href: "/household", label: "Familia" },
+  { href: "/dashboard", label: "Resumen", icon: "🏠" },
+  { href: "/accounts", label: "Cuentas", icon: "💳" },
+  { href: "/transactions", label: "Transacciones", icon: "📋" },
+  { href: "/categories", label: "Categorías", icon: "🗂️" },
+  { href: "/tags", label: "Etiquetas", icon: "🏷️" },
+  { href: "/debts", label: "Deudas", icon: "📉" },
+  { href: "/savings", label: "Ahorro", icon: "🎯" },
+  { href: "/alerts", label: "Alertas", icon: "🔔" },
+  { href: "/household", label: "Familia", icon: "🏡" },
 ];
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
@@ -100,13 +100,16 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <nav className="grid grid-cols-3 gap-1.5">
+        <nav className="grid grid-cols-3 gap-2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-md border border-border px-2 py-2 text-center text-xs text-ink transition-colors hover:bg-surface-raised"
+              className="flex flex-col items-center gap-1 rounded-2xl bg-surface-raised px-2 py-3 text-center text-xs text-ink transition-all active:scale-[0.97] active:bg-brand-soft"
             >
+              <span className="text-lg" aria-hidden="true">
+                {link.icon}
+              </span>
               {link.label}
             </Link>
           ))}

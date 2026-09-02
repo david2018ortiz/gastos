@@ -30,7 +30,7 @@ export function NavMenu({ pendingInvitations = 0 }: { pendingInvitations?: numbe
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="relative flex h-8 w-8 items-center justify-center rounded-md text-lg hover:bg-surface-raised"
+        className="relative flex h-8 w-8 items-center justify-center rounded-full text-lg hover:bg-surface-raised"
         aria-label="Abrir menú"
         aria-expanded={open}
       >
