@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/dashboard", label: "Resumen", icon: "🏠" },
   { href: "/accounts", label: "Cuentas", icon: "💳" },
   { href: "/transactions", label: "Transacciones", icon: "📋" },
+  { href: "/statistics", label: "Estadísticas", icon: "📊" },
   { href: "/categories", label: "Categorías", icon: "🗂️" },
   { href: "/tags", label: "Etiquetas", icon: "🏷️" },
   { href: "/debts", label: "Deudas", icon: "📉" },

@@ -3,15 +3,16 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { buttonClasses } from "@/components/button-styles";
 import { FilterBar } from "@/components/filter-bar";
+import { SearchBox } from "@/components/search-box";
 import { TransactionList } from "@/components/transaction-list";
 import { PageTitleBar } from "@/components/page-title-bar";
 
 export default async function TransactionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; tag?: string; account?: string }>;
+  searchParams: Promise<{ category?: string; tag?: string; account?: string; q?: string }>;
 }) {
-  const { category: categoryFilter, tag: tagFilter, account: accountFilter } =
+  const { category: categoryFilter, tag: tagFilter, account: accountFilter, q } =
     await searchParams;
 
   const supabase = await createClient();
@@ -38,6 +39,27 @@ export default async function TransactionsPage({
     transactionIdsForTag = (tagLinks ?? []).map((l) => l.transaction_id);
   }
 
+  // La búsqueda coincide con la descripción, o con el nombre de la
+  // categoría o cuenta de la transacción.
+  let searchOrFilter: string | null = null;
+  if (q) {
+    // PostgREST usa comas y paréntesis como sintaxis del filtro .or(): se
+    // quitan del término de búsqueda para no romper la consulta.
+    const safeQ = q.replace(/[,()]/g, " ").trim();
+    const [{ data: matchingCategories }, { data: matchingAccounts }] = await Promise.all([
+      supabase.from("categories").select("id").ilike("name", `%${safeQ}%`),
+      supabase.from("accounts").select("id").ilike("name", `%${safeQ}%`),
+    ]);
+    const clauses = [`note.ilike.%${safeQ}%`];
+    if (matchingCategories && matchingCategories.length > 0) {
+      clauses.push(`category_id.in.(${matchingCategories.map((c) => c.id).join(",")})`);
+    }
+    if (matchingAccounts && matchingAccounts.length > 0) {
+      clauses.push(`account_id.in.(${matchingAccounts.map((a) => a.id).join(",")})`);
+    }
+    searchOrFilter = clauses.join(",");
+  }
+
   let query = supabase
     .from("transactions")
     .select(
@@ -55,6 +77,9 @@ export default async function TransactionsPage({
   if (transactionIdsForTag) {
     query = query.in("id", transactionIdsForTag.length ? transactionIdsForTag : ["-"]);
   }
+  if (searchOrFilter) {
+    query = query.or(searchOrFilter);
+  }
 
   const { data: transactions } = await query;
 
@@ -70,6 +95,8 @@ export default async function TransactionsPage({
             </Link>
           }
         />
+
+        <SearchBox placeholder="Buscar por descripción, categoría o cuenta…" />
 
         <div className="flex items-center justify-end">
           <FilterBar categories={categories ?? []} tags={tags ?? []} accounts={accounts ?? []} />
