@@ -8,6 +8,7 @@ import { ChangePasswordForm } from "./change-password-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PageTitleBar } from "@/components/page-title-bar";
 import { getUserAccounts } from "@/lib/get-user-accounts";
+import { AccountIcon } from "@/components/account-icon";
 
 const navLinks = [
   { href: "/dashboard", label: "Resumen", icon: "🏠" },
@@ -133,8 +134,9 @@ export default async function ProfilePage() {
                   const totals = totalsByAccount.get(account.id) ?? { income: 0, expense: 0 };
                   return (
                     <Fragment key={account.id}>
-                      <span className="truncate">
-                        {account.icon ?? "💳"} {account.name}
+                      <span className="flex items-center gap-1.5 truncate">
+                        <AccountIcon type={account.icon_type} color={account.color} size={13} />
+                        {account.name}
                       </span>
                       <span className="text-right tabular-nums text-positive">
                         {currencyFormatter.format(totals.income)}

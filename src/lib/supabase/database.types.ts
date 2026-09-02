@@ -16,27 +16,33 @@ export type Database = {
     Tables: {
       accounts: {
         Row: {
+          color: string
           created_at: string
           household_id: string | null
           icon: string | null
+          icon_type: string
           id: string
           name: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          color?: string
           created_at?: string
           household_id?: string | null
           icon?: string | null
+          icon_type?: string
           id?: string
           name: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          color?: string
           created_at?: string
           household_id?: string | null
           icon?: string | null
+          icon_type?: string
           id?: string
           name?: string
           updated_at?: string

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { deleteTransaction } from "@/app/(app)/transactions/actions";
 import { SwipeableRow } from "./swipeable-row";
 import { colorForId } from "@/lib/chart-colors";
+import { AccountIcon } from "./account-icon";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -25,7 +26,7 @@ export type TransactionRow = {
   note: string | null;
   household_id?: string | null;
   categories: { name: string; icon: string | null } | null;
-  accounts?: { name: string; icon: string | null } | null;
+  accounts?: { name: string; icon_type: string; color: string } | null;
 };
 
 function groupByDate(transactions: TransactionRow[]) {
@@ -109,10 +110,19 @@ export function TransactionList({
                           )}
                         </p>
                         {(t.note || t.accounts) && (
-                          <p className="truncate text-xs leading-tight text-ink-muted">
+                          <p className="flex items-center gap-1 truncate text-xs leading-tight text-ink-muted">
                             {t.note}
-                            {t.note && t.accounts && " · "}
-                            {t.accounts && `${t.accounts.icon ?? "💳"} ${t.accounts.name}`}
+                            {t.note && t.accounts && <span>·</span>}
+                            {t.accounts && (
+                              <span className="flex items-center gap-1">
+                                <AccountIcon
+                                  type={t.accounts.icon_type}
+                                  color={t.accounts.color}
+                                  size={11}
+                                />
+                                {t.accounts.name}
+                              </span>
+                            )}
                           </p>
                         )}
                       </div>

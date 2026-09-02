@@ -19,16 +19,21 @@ export async function createAccount(
   }
 
   const name = String(formData.get("name") ?? "").trim();
-  const icon = String(formData.get("icon") ?? "").trim() || null;
+  const iconType = String(formData.get("iconType") ?? "bank");
+  const color = String(formData.get("color") ?? "#72e3ad");
   const householdId = String(formData.get("householdId") ?? "") || null;
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
   }
 
-  const { error } = await supabase
-    .from("accounts")
-    .insert({ user_id: user.id, name, icon, household_id: householdId });
+  const { error } = await supabase.from("accounts").insert({
+    user_id: user.id,
+    name,
+    icon_type: iconType,
+    color,
+    household_id: householdId,
+  });
 
   if (error) {
     return {
@@ -49,7 +54,8 @@ export async function renameAccount(
   const supabase = await createClient();
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
-  const icon = String(formData.get("icon") ?? "").trim() || null;
+  const iconType = String(formData.get("iconType") ?? "bank");
+  const color = String(formData.get("color") ?? "#72e3ad");
 
   if (!name) {
     return { error: "El nombre es obligatorio." };
@@ -57,7 +63,7 @@ export async function renameAccount(
 
   const { error } = await supabase
     .from("accounts")
-    .update({ name, icon })
+    .update({ name, icon_type: iconType, color })
     .eq("id", id);
 
   if (error) {

@@ -61,7 +61,8 @@ export default async function AccountsPage() {
                 key={account.id}
                 id={account.id}
                 name={account.name}
-                icon={account.icon}
+                iconType={account.icon_type}
+                color={account.color}
                 balance={balanceByAccount.get(account.id) ?? 0}
                 household={Boolean(account.household_id)}
               />

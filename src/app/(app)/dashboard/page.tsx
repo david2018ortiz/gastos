@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getUserHouseholds } from "@/lib/get-user-households";
 import { getUserAccounts } from "@/lib/get-user-accounts";
 import { todayInBogota } from "@/lib/today";
+import { AccountIcon } from "@/components/account-icon";
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -107,7 +108,7 @@ export default async function DashboardPage({
   let query = supabase
     .from("transactions")
     .select(
-      "id, type, amount, occurred_at, note, category_id, household_id, categories(id, name, icon), accounts(name, icon), transaction_tags(tags(id, name))",
+      "id, type, amount, occurred_at, note, category_id, household_id, categories(id, name, icon), accounts(name, icon_type, color), transaction_tags(tags(id, name))",
     )
     .gte("occurred_at", start)
     .lt("occurred_at", end)
@@ -232,8 +233,9 @@ export default async function DashboardPage({
             <ul className="space-y-1.5">
               {accounts.map((account) => (
                 <li key={account.id} className="flex items-center justify-between text-sm">
-                  <span>
-                    {account.icon ?? "💳"} {account.name}
+                  <span className="flex items-center gap-2">
+                    <AccountIcon type={account.icon_type} color={account.color} size={14} />
+                    {account.name}
                   </span>
                   <span className="tabular-nums font-medium">
                     {currencyFormatter.format(balanceByAccount.get(account.id) ?? 0)}

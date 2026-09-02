@@ -1,5 +1,7 @@
 import type { AccountOption } from "@/lib/get-user-accounts";
 
+const TYPE_GLYPH: Record<string, string> = { bank: "🏦", wallet: "📱", card: "💳" };
+
 /**
  * Deja elegir de qué cuenta/fondo sale o entra el dinero (Davivienda,
  * Nequi, etc.). Si el usuario no tiene cuentas creadas, no se renderiza
@@ -30,7 +32,7 @@ export function AccountSelect({
         <option value="">Sin cuenta</option>
         {accounts.map((a) => (
           <option key={a.id} value={a.id}>
-            {a.icon ?? "💳"} {a.name}
+            {a.icon ?? TYPE_GLYPH[a.icon_type] ?? "💳"} {a.name}
           </option>
         ))}
       </select>
