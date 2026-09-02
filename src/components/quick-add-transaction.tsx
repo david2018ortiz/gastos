@@ -167,7 +167,6 @@ export function QuickAddTransaction({
 
             <form action={formAction} className="space-y-4">
               <input type="hidden" name="type" value={type} />
-              <input type="hidden" name="categoryId" value={categoryId} />
 
               <div className="flex gap-2">
                 <button
@@ -224,28 +223,25 @@ export function QuickAddTransaction({
               />
 
               {filteredCategories.length > 0 && (
-                <div className="space-y-1.5">
-                  <p className="text-xs text-ink-muted">Categoría</p>
-                  <div className="flex flex-wrap gap-1.5">
+                <div className="space-y-1">
+                  <label htmlFor="quickAddCategoryId" className="text-xs text-ink-muted">
+                    Categoría
+                  </label>
+                  <select
+                    id="quickAddCategoryId"
+                    name="categoryId"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                    className="w-full rounded-md border px-3 py-2 text-sm"
+                  >
+                    <option value="">Sin categoría</option>
                     {filteredCategories.map((c) => (
-                      <button
-                        key={c.id}
-                        type="button"
-                        onClick={() =>
-                          setCategoryId(categoryId === c.id ? "" : c.id)
-                        }
-                        className={
-                          "flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors " +
-                          (categoryId === c.id
-                            ? "border-brand bg-brand-soft"
-                            : "border-border text-ink-secondary")
-                        }
-                      >
-                        <span aria-hidden="true">{c.icon ?? "🏷️"}</span>
+                      <option key={c.id} value={c.id}>
+                        {c.icon ? `${c.icon} ` : ""}
                         {c.name}
-                      </button>
+                      </option>
                     ))}
-                  </div>
+                  </select>
                 </div>
               )}
 
