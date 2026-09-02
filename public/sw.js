@@ -1,4 +1,4 @@
-const CACHE_NAME = "walley-shell-v1";
+const CACHE_NAME = "walley-shell-v2";
 const APP_SHELL = ["/", "/manifest.json", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -23,12 +23,15 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Estrategia network-first con fallback a caché: prioriza datos frescos
-// (transacciones, saldos) y solo sirve el shell cacheado si no hay red.
+// Solo interceptamos navegaciones completas (abrir/recargar una página),
+// nunca los fetches internos de Next.js (RSC payloads, /_next/*, llamadas
+// a Supabase, etc.) — antes se interceptaba CUALQUIER GET, y cachear por
+// error una respuesta que no es el HTML completo de la página (por
+// ejemplo un payload RSC) podía dejar la pantalla en blanco al reabrir la
+// app desde segundo plano.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  // Ignora peticiones que no sean http(s) (ej. chrome-extension://): el
-  // Cache API no las soporta y cache.put() lanzaría un error.
+  if (event.request.mode !== "navigate") return;
   if (!event.request.url.startsWith("http")) return;
 
   event.respondWith(
@@ -40,6 +43,6 @@ self.addEventListener("fetch", (event) => {
           .then((cache) => cache.put(event.request, responseClone));
         return response;
       })
-      .catch(() => caches.match(event.request)),
+      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/"))),
   );
 });

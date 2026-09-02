@@ -61,14 +61,11 @@ export function SwipeableRow({
 
   return (
     <div className="relative overflow-hidden">
-      <div
-        className="absolute inset-y-1 left-0 flex items-center justify-center rounded-xl bg-brand text-xs font-medium text-brand-ink"
-        style={{ width: ACTION_WIDTH }}
-      >
-        <span className="flex flex-col items-center gap-1">
+      <div className="absolute inset-y-1 left-0" style={{ width: ACTION_WIDTH }}>
+        <div className="flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-brand text-xs font-medium text-brand-ink mx-1.5">
           <span aria-hidden="true">✏️</span>
           Editar
-        </span>
+        </div>
       </div>
       <form
         action={deleteAction}
@@ -78,7 +75,7 @@ export function SwipeableRow({
         <input type="hidden" name="id" value={deleteId} />
         <button
           type="submit"
-          className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl bg-negative text-xs font-medium text-white"
+          className="flex h-full w-[calc(100%-12px)] mx-1.5 flex-col items-center justify-center gap-1 rounded-xl bg-negative text-xs font-medium text-white"
         >
           <span aria-hidden="true">🗑️</span>
           Eliminar
